@@ -8,7 +8,7 @@
         <v-progress-linear
           :value="nowTime"
           class="my-0 py-0"
-          height="4"
+          height="5"
           background-color="pink lighten-4"
           color="pink lighten-1"
         ></v-progress-linear>

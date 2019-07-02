@@ -31,10 +31,13 @@
               <v-flex grow>
                 <v-text-field
                   flat
+                  v-model="text"
                   class="mt-2"
                   prepend-inner-icon="search"
                   clearable
                   color="pink lighten-3"
+                  @click:prepend-inner="sendWithSearch(text)"
+                  @keydown.enter="sendWithSearch(text)"
                 ></v-text-field>
               </v-flex>
             </v-layout>
@@ -56,6 +59,11 @@ export default {
   methods: {
     goPlaylist() {
       this.$router.push('/')
+    },
+    sendWithSearch(text) {
+      this.$store.dispatch('sendWithSearch', text)
+      this.text = ""
+      this.$router.push('/search')
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid grid-list-md mb-5 mt-3 class="playlist">
+  <v-container fluid grid-list-md class="playlist">
     <v-layout row wrap justify-space-around v-resize="onResize">
       <v-flex
         v-for="list in showPlaylists"
@@ -13,6 +13,7 @@
             height="280px"
             :img="list.img"
             style="transition: all 1.0s;"
+            @click="selectPlaylist(list)"
           >
             <v-layout align-center fill-height>
               <v-flex>
@@ -157,6 +158,10 @@ export default {
         this.dialog = false
         this.$store.commit('addPlaylist', this.newName)
       }
+    },
+    selectPlaylist(list) {
+      this.$emit('selectPlaylist', list)
+      this.$router.push('playlist')
     }
   }
 }

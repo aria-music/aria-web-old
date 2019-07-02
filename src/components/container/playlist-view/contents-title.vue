@@ -7,7 +7,7 @@
       :class="theme ? 'grey lighten-3' : 'grey darken-3'"
     >
       <v-img
-        :src="nowPlaying.thumbnail == '' ? src : nowPlaying.thumbnail "
+        :src="nowSelect.thumbnail == '' ? src : nowSelect.thumbnail "
         contain
         class="img-size"
         :aspect-ratio="1/1"
@@ -17,7 +17,7 @@
       class="mt-3 mx-auto width"
     >
       <v-card-title class="playing-title" v-if="showTitle">
-          {{ nowPlaying.title }}
+          {{ nowSelect.title }}
       </v-card-title>
       <v-card-title class="playing-title" v-else>
           {{ slicedTitle }}
@@ -56,12 +56,12 @@ export default {
   }),
   props: {
     theme: {type: Boolean, required: true},
-    nowPlaying: {type: Object, required: true},
+    nowSelect: {type: Object, required: true},
   },
   computed: {
     slicedTitle() {
       let isSlice = false
-      let title = this.nowPlaying.title
+      let title = this.nowSelect.title
       function strLength(strSrc) {
         let len = 0, i;
         strSrc = escape(strSrc)

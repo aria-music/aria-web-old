@@ -6,7 +6,6 @@
           <v-card
             v-for="result in showList"
             :key="result.key"
-            style="transition: all 0.3s;"
             height="100"
             width="95%"
             flat
@@ -80,15 +79,16 @@ export default {
     showList: null,
     src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
   }),
-  mounted() {
-    this.showList = this.searchedList
-  },
   computed: {
     searchedList() {
       return this.$store.state.searchedData
     },
   },
   watch: {
+    searchedList: function() {
+      this.$emit('initSearchResult')
+      this.showList = this.searchedList
+    },
     select: function(newSelect) {
       switch(newSelect){
         case "everything":

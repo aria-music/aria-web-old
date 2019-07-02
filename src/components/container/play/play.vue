@@ -1,9 +1,10 @@
 <template>
-  <v-container fluid grid-list-md mb-5 mt-3 class="playing">
+  <v-container fluid grid-list-md class="playing">
     <v-layout row wrap justify-center>
       <v-flex shrink>
         <playtitle
           :theme="theme"
+          :nowPlaying="nowPlaying"
         />
       </v-flex>
       <v-flex d-flex>
@@ -21,7 +22,10 @@
             </v-card>
           </v-flex>
           <v-flex>
-            <playlist/>
+            <playlist
+              :theme="theme"
+              :nowPlaying="nowPlaying"
+            />
           </v-flex>
         </v-layout>
       </v-flex>
@@ -37,8 +41,11 @@ export default {
     value: [0, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0],
   }),
   computed: {
+    nowPlaying() {
+      return this.$store.state.playingData
+    },
     theme() {
-        return  this.$store.state.theme
+      return  this.$store.state.theme
     }
   },
   components: {

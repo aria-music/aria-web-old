@@ -1,10 +1,12 @@
 <template>
   <v-app :dark="theme">
     <ariaHeader/>
-    <router-link to="/playing">playing</router-link>
-    <router-link to="/searched">searched</router-link>
-    <router-link to="/">playlist</router-link>
-    <router-view/>
+    <div class="py-4 mb-3"></div>
+    <router-link to="/playing"></router-link>
+    <router-link to="/searched"></router-link>
+    <!-- <router-link to="/playlist"></router-link> -->
+    <router-link to="/"></router-link>
+    <router-view></router-view>
     <ariaFooter/>
   </v-app>
 </template>
@@ -19,10 +21,16 @@ export default {
     ariaHeader,
     ariaFooter,
   },
+  data: () => ({
+    //
+  }),
   computed: {
     theme() {
       return this.$store.state.theme
     }
+  },
+  methods: {
+    //
   },
 }
 </script>

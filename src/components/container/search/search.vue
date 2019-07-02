@@ -1,10 +1,10 @@
 <template>
-  <v-container fluid grid-list-md mb-5 mt-3 class="serched">
+  <v-container fluid grid-list-md class="serched">
     <v-layout column wrap>
       <v-flex>
         <v-card>
           <v-card-text style="font-size: 24px;">
-            <strong>Search results for "{{ searchedValue }}"</strong>
+            <strong>Search results for "{{ searchContents }}"</strong>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -56,6 +56,7 @@
               <v-flex>
                 <results
                   :select="select"
+                  v-on:initSearchResult="initSearchResult"
                 />
               </v-flex>
             </v-layout>
@@ -76,10 +77,19 @@ export default {
       {key: 2, value: 'Google play music', selecter: 'gpm', icon: 'fab fa-google-play', color: 'orange accent-3'},
     ],
     select: 'everything',
-    searchedValue: "大原櫻子"
   }),
+  computed: {
+    searchContents() {
+      return this.$store.state.searchContents
+    }
+  },
   components: {
     results,
+  },
+  methods: {
+    initSearchResult() {
+      this.select = 'everything'
+    }
   }
 }
 </script>

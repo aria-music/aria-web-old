@@ -17,12 +17,11 @@
               class="list-group-item my-1"
               v-for="element in queue"
               :key="element.key"
-              @click="goPlaylist(element)"
+              @click="selectContents"
             >
               <v-card
                 class="mx-2 pa-0 card"
                 flat
-                :class="nowPlaying.key == element.key ? (theme ? 'teal accent-4' : 'pink lighten-5') : ''"
               >
                 <v-layout row align-center>
                   <v-flex xs2 pa-0>
@@ -104,13 +103,8 @@ export default {
     src: 'https://yt3.ggpht.com/a/AGF-l7_Fe-TsDeIJhiIJeH4UvGNGr9VFOHSJytPgkg=s900-mo-c-c0xffffffff-rj-k-no',
   }),
   computed: {
-    queue: {
-      get() {
-        return this.$store.state.queue
-      },
-      set(queue) {
-        this.$store.commit('setQueue', queue)
-      }
+    queue() {
+      return this.$store.state.queue
     },
     dragOptions() {
       return {
@@ -123,12 +117,10 @@ export default {
   },
   props: {
     theme: {type: Boolean, required: true},
-    nowPlaying: {type: Object, required: true},
-
   },
   methods: {
-    goPlaylist(element) {
-      this.$store.commit('nowPlaying', element)
+    selectContents(element) {
+      this.$emit('selectContents', element)
     }
   }
 };
