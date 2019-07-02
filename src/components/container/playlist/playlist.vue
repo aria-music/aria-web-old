@@ -156,7 +156,7 @@ export default {
       if(this.newName == "") this.error = true
       else {
         this.dialog = false
-        this.$store.commit('addPlaylist', this.newName)
+        this.$store.dispatch('sendWithPlaylists', this.newName)
       }
     },
     selectPlaylist(list) {

@@ -25,7 +25,18 @@ ws.onmessage = (event) => {
         case 'search':
             store.commit('storeSearchResult', container.data)
             break
+
+        case 'playlists':
+            // store.commit('storePlaylists', container.data)
+            break
     }
+}
+
+let sendToSocket = (op, data) => {
+    let Json = sendJson
+    Json.op = op
+    Json.data = data
+    ws.send(JSON.stringify(Json))
 }
 
 const store = new Vuex.Store({
@@ -57,15 +68,6 @@ const store = new Vuex.Store({
         setQueue(state, queue) {
             state.queue = queue
         },
-        addPlaylist(state, newName) {
-            let length = state.playlists.length
-            state.playlists.push({
-                name: newName,
-                img: '',
-                index: length,
-                kind: 'playlist'
-            })
-        },
         storeSearchResult(state, result) {
             state.searchedData = result.map((property, index) => {
                 property.key = index
@@ -74,14 +76,22 @@ const store = new Vuex.Store({
         },
         getSearchContents(state, text) {
             state.searchContents = text
+        },
+        storePlaylists(state, result) {
+            state.playlists = result.map((property, index) => {
+                property.index = index
+                property.kind = 'playlist'
+                return property
+            })
         }
     },
     actions: {
         sendWithSearch(state, text) {
             this.commit('getSearchContents', text)
-            sendJson.op = 'search'
-            sendJson.data = {query: text}
-            ws.send(JSON.stringify(sendJson))
+            sendToSocket('search', { query: text })
+        },
+        sendWithPlaylists(state, newName) {
+            sendToSocket('create_playlist', { name: newName })
         }
     }
 })
