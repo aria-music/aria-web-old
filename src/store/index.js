@@ -17,17 +17,29 @@ let sendJson = {
 const decoder = new OpusToPCM({channels:2})
 let context = new AudioContext()
 let playing = 0.0
+let session_key
 
-var ws = new WebSocket('wss://sarisia.cc/aria/player')
-var audio = new WebSocket('wss://sarisia.cc/stream/stream')
-audio.binaryType = "arraybuffer"
+let ws = new WebSocket('wss://sarisia.cc/aria/player')
+let audio = null
+
+ws.onopen = (event) => {
+    audio = new WebSocket('wss://sarisia.cc/stream/stream')
+    audio.binaryType = "arraybuffer"
+    audio.onopen = (event) => {
+        audio.send(session_key)
+    }
+    audio.onmessage = (event) => {
+        const raw = new Uint8Array(event.data)
+        decoder.decode(raw)
+    }
+}
 
 ws.onmessage = (event) => {
     const container = JSON.parse(event.data)
     switch (container.res) {
         case 'hello':
-            sendJson.key = container.key
-            audio.send(container.key)
+            session_key = container.key
+            sendJson.key = session_key
             break
 
         case 'search':
@@ -54,11 +66,6 @@ decoder.on('decode', (decoded) => {
         playing = context.currentTime + AudioBuffer.duration
     }
 })
-
-audio.onmessage = (event) => {
-    const raw = new Uint8Array(event.data)
-    decoder.decode(raw)
-}
 
 let sendToSocket = (op, data) => {
     let Json = sendJson
