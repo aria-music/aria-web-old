@@ -10,6 +10,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "opus-to-pcm": "github:sarisia/opus-to-pcm#aria",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vue2-perfect-scrollbar": "^1.2.1",

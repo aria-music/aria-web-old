@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import OpusToPCM from 'opus-to-pcm'
 
 Vue.use(Vuex)
 
@@ -13,13 +14,20 @@ let sendJson = {
     data: null
 }
 
+const decoder = new OpusToPCM({channels:2})
+let context = new AudioContext()
+let playing = 0.0
+
 var ws = new WebSocket('wss://sarisia.cc/aria/player')
+var audio = new WebSocket('wss://sarisia.cc/stream/stream')
+audio.binaryType = "arraybuffer"
 
 ws.onmessage = (event) => {
     const container = JSON.parse(event.data)
     switch (container.res) {
         case 'hello':
             sendJson.key = container.key
+            audio.send(container.key)
             break
 
         case 'search':
@@ -30,6 +38,26 @@ ws.onmessage = (event) => {
             // store.commit('storePlaylists', container.data)
             break
     }
+}
+
+decoder.on('decode', (decoded) => {
+    let audioSource = context.createBufferSource()
+    audioSource.buffer = decoded
+    audioSource.connect(context.destination)
+
+    console.log(AudioBuffer.duration)
+    if (context.currentTime < playing) {
+        audioSource.start(playing)
+        playing += AudioBuffer.duration
+    } else {
+        audioSource.start(context.currentTime)
+        playing = context.currentTime + AudioBuffer.duration
+    }
+})
+
+audio.onmessage = (event) => {
+    const raw = new Uint8Array(event.data)
+    decoder.decode(raw)
 }
 
 let sendToSocket = (op, data) => {
