@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid grid-list-md class="playlist">
+  <v-container fluid grid-list-md>
     <v-layout row wrap justify-space-around v-resize="onResize">
       <v-flex
         v-for="list in showPlaylists"
@@ -167,11 +167,6 @@ export default {
 }
 </script>
 <style>
-@media(min-width: 1200px){
-  .playlist {
-    width: 1200px;
-  }
-}
 .playlists-enter, .playlists-leave-to {
   opacity: 0;
 }

@@ -5,7 +5,7 @@
       app
       fixed
     >
-      <div class="header mx-auto">
+      <div class="mx-auto" :style="{width: `${width}px`}">
         <v-layout row align-center>
           <v-flex xs8>
             <v-toolbar-title style="width: 150px" class="ml-0 pl-3">
@@ -56,6 +56,9 @@ export default {
     text: "",
     color: "",
   }),
+  props: {
+    width: {type: Number, required: true}
+  },
   methods: {
     goPlaylist() {
       this.$router.push('/')
@@ -71,10 +74,5 @@ export default {
 <style>
 .header {
   width: 100%;
-}
-@media(min-width: 1200px){
-  .header {
-    width: 1200px;
-  }
 }
 </style>

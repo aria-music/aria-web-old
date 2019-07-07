@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid grid-list-md class="serched">
+  <v-container fluid grid-list-md>
     <v-layout column wrap>
       <v-flex>
         <v-card>
@@ -93,10 +93,3 @@ export default {
   }
 }
 </script>
-<style>
-@media(min-width: 1200px){
-  .serched {
-    width: 1200px;
-  }
-}
-</style>

@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid grid-list-md class="playing">
+  <v-container fluid grid-list-md>
     <v-layout row wrap justify-center>
       <v-flex shrink>
         <playtitle
@@ -57,10 +57,3 @@ export default {
   }
 }
 </script>
-<style>
-@media(min-width: 1200px){
-  .playing {
-    width: 1200px;
-  }
-}
-</style>

@@ -15,7 +15,7 @@
       </v-flex>
       <v-flex>
         <v-toolbar>
-          <div class="footer mx-auto">
+          <div class="mx-auto" :style="{width: `${width}px`}">
             <v-layout row>
               <v-flex xs6>
                 <v-toolbar-items>
@@ -158,6 +158,9 @@ export default {
 		isFavorite: false,
 		isClose: false,
 	}),
+  props: {
+    width: {type: Number, required: true}
+  },
 	mounted() {
 		this.startProgress()
 	},
@@ -211,14 +214,6 @@ export default {
 }
 </script>
 <style>
-.footer {
-  width: 100%;
-}
-@media(min-width: 1200px){
-  .footer {
-    width: 1200px;
-  }
-}
 .marquee-title {
 	width: 200px;
 	overflow: hidden;
