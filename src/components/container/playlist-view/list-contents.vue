@@ -1,7 +1,7 @@
 <template>
   <v-card height="100%">
     <v-card-title>
-      <strong style="font-size: 20px;">Next up</strong>
+      <strong style="font-size: 20px;">Contents</strong>
       <v-icon class="ml-2">fas fa-forward</v-icon>
     </v-card-title>
     <div id="playing-list">
@@ -17,7 +17,7 @@
               class="list-group-item my-1"
               v-for="element in queue"
               :key="element.key"
-              @click="selectContents"
+              @click="selectContents(element)"
             >
               <v-card
                 class="mx-2 pa-0 card"
@@ -34,7 +34,7 @@
                       :aspect-ratio="1/1"
                     ></v-img>
                   </v-flex>
-                  <v-flex xs7>
+                  <v-flex xs8>
                     <strong>{{ element.title }}</strong>
                   </v-flex>
                   <v-flex xs1 offset-xs1>
@@ -62,14 +62,6 @@
                         </v-list-tile>
                       </v-list>
                     </v-menu>
-                  </v-flex>
-                  <v-flex>
-                    <v-btn
-                      icon
-                      class="handle"
-                    >
-                      <v-icon small>fas fa-bars</v-icon>
-                    </v-btn>
                   </v-flex>
                 </v-layout>
               </v-card>
@@ -115,6 +107,9 @@ export default {
       };
     },
   },
+  mounted() {
+    this.selectContents(this.queue[0])
+  },
   props: {
     theme: {type: Boolean, required: true},
   },
@@ -128,7 +123,7 @@ export default {
 <style>
 #playing-list {
   position: relative;
-  height: calc(100vh - 450px); /* TODO */
+  height: calc(100vh - 250px); /* TODO */
   width: 100%;
 }
 .ps {

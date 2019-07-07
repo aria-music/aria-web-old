@@ -6,7 +6,7 @@
     <div class="mt-5 pt-4 mx-auto" :style="{width: `${width}px`}">
       <router-link to="/playing"></router-link>
       <router-link to="/searched"></router-link>
-      <!-- <router-link to="/playlist"></router-link> -->
+      <router-link to="/playlist"></router-link>
       <router-link to="/"></router-link>
       <router-view></router-view>
     </div>

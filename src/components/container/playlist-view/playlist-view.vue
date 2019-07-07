@@ -1,15 +1,14 @@
 <template>
-  <v-container fluid grid-list-md class="playing">
+  <v-container fluid grid-list-md>
     <v-layout row wrap justify-center>
       <v-flex shrink>
         <contentsTitle
           :theme="theme"
-          :nowSelect="nowSelect"
         />
       </v-flex>
       <v-flex d-flex>
         <v-flex>
-          <playlist
+          <listContents
             :theme="theme"
             v-on:selectContents="selectContents"
           />
@@ -24,7 +23,7 @@ import listContents from '@/components/container/playlist-view/list-contents'
 
 export default {
   data: () => ({
-    //
+    nowSelect: {},
   }),
   computed: {
     theme() {
@@ -42,10 +41,3 @@ export default {
   }
 }
 </script>
-<style>
-@media(min-width: 1200px){
-  .playing {
-    width: 1200px;
-  }
-}
-</style>

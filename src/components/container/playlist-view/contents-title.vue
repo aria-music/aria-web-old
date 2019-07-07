@@ -7,7 +7,7 @@
       :class="theme ? 'grey lighten-3' : 'grey darken-3'"
     >
       <v-img
-        :src="nowSelect.thumbnail == '' ? src : nowSelect.thumbnail "
+        :src="thumbnail"
         contain
         class="img-size"
         :aspect-ratio="1/1"
@@ -16,11 +16,8 @@
     <v-card
       class="mt-3 mx-auto width"
     >
-      <v-card-title class="playing-title" v-if="showTitle">
-          {{ nowSelect.title }}
-      </v-card-title>
-      <v-card-title class="playing-title" v-else>
-          {{ slicedTitle }}
+      <v-card-title class="playing-title">
+          {{ title }}
       </v-card-title>
       <v-divider class="mx-3"></v-divider>
       <v-toolbar
@@ -29,15 +26,41 @@
       >
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <v-btn
-              v-for="item in items"
-              :key="item.key"
+          <transition-group class="my-auto" name="tandf">
+            <v-btn
+              flat
+              key="play"
+              @click="play"
+              class="my-0 py-3"
+            >
+              <v-icon>play_arrow</v-icon>
+              <div class="ml-1 pt-1">play all</div>
+            </v-btn>
+            <v-btn
               icon
-              @click="btnFunc(item.key)"
+              key="share"
+              @click="torf = !torf"
               class="mr-0"
-          >
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-btn>
+            >
+              <v-icon>share</v-icon>
+            </v-btn>
+            <v-btn
+              v-if="torf"
+              icon
+              key="twitter"
+              class="mr-0"
+            >
+              <v-icon>fab fa-twitter</v-icon>
+            </v-btn>
+            <v-btn
+              v-if="torf"
+              icon
+              key="facebook"
+              class="mr-0"
+            >
+              <v-icon>fab fa-facebook-square</v-icon>
+            </v-btn>
+          </transition-group>
         </v-toolbar-items>
       </v-toolbar>
     </v-card>
@@ -46,59 +69,17 @@
 <script>
 export default {
   data: () => ({
-    src: 'https://yt3.ggpht.com/a/AGF-l7_Fe-TsDeIJhiIJeH4UvGNGr9VFOHSJytPgkg=s900-mo-c-c0xffffffff-rj-k-no',
-    showTitle: false,
-    items: [
-      {key: 1, icon: "fab fa-facebook-f"},
-      {key: 2, icon: "share"},
-      {key: 3, icon: "error_outline"},
-    ],
+    thumbnail: 'https://yt3.ggpht.com/a/AGF-l7_Fe-TsDeIJhiIJeH4UvGNGr9VFOHSJytPgkg=s900-mo-c-c0xffffffff-rj-k-no',
+    title: 'inoriminase',
+    torf: false,
   }),
   props: {
     theme: {type: Boolean, required: true},
-    nowSelect: {type: Object, required: true},
-  },
-  computed: {
-    slicedTitle() {
-      let isSlice = false
-      let title = this.nowSelect.title
-      function strLength(strSrc) {
-        let len = 0, i;
-        strSrc = escape(strSrc)
-        for(i = 0; i < strSrc.length; i++, len++){
-          if(strSrc.charAt(i) == "%"){
-            if(strSrc.charAt(++i) == "u"){
-              i += 3
-              len++
-            }
-            i++
-          }
-        }
-        return len
-      }
-
-      while( strLength(title) > 38 ){
-        title = title.slice(0, title.length-1)
-        isSlice = true
-      }
-      if( isSlice ){
-        title += '...'
-      }
-      return title
-    },
   },
   methods: {
-    btnFunc(key) {
-      switch(key){
-        case 1:
-          break;
-        case 2:
-          break;
-        case 3:
-          this.showTitle = !this.showTitle
-          break;
-      }
-    },
+    play() {
+      //
+    }
   },
 }
 </script>
@@ -115,5 +96,17 @@ export default {
   font-size: 16px;
   font-weight: bold;
   padding-bottom: 1%;
+}
+.tandf-enter-active {
+  transition: .5s ease-in;
+}
+.tandf-leave-active {
+  transition: .1s ease-in;
+}
+.tandf-enter, .tandf-leave-to {
+  opacity: 0;
+}
+.tandf-leave, .tandf-enter-to {
+  opacity: 1;
 }
 </style>

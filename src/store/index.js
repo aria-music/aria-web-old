@@ -14,7 +14,7 @@ let sendJson = {
     data: null
 }
 
-const decoder = new OpusToPCM({channels:2})
+const decoder = new OpusToPCM({ channels: 2 })
 let context = new AudioContext()
 let playing = 0.0
 let session_key
