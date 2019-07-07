@@ -17,48 +17,52 @@
         <v-toolbar>
           <div class="mx-auto" :style="{width: `${width}px`}">
             <v-layout row>
-              <v-flex xs6>
+              <v-flex>
                 <v-toolbar-items>
                   <!-- volume btn -->
-                  <v-menu
-                    :close-on-content-click="false"
-                    open-on-hover
-                    top
-                    offset-y
-                    open-delay="200"
-                    ><template v-slot:activator="{ on }">
-                      <v-btn
-                        icon
-                        v-on="on"
-                        @click="mute"
-                      ><v-icon>{{ volumeIcon }}</v-icon>
-                      </v-btn>
-                    </template>
-                    <v-card>
-                      <v-card-title>
-                        <v-icon>{{ volumeIcon }}</v-icon>
-                        <span><strong>Volume</strong></span>
-                      </v-card-title>
-                      <v-layout>
-                        <v-flex mx-3>
-                          <v-slider
-                            v-model="volume"
-                            color="pink lighten-3"
-                            thumb-label
-                            :thumb-size="26"
-                          ></v-slider>
-                        </v-flex>
-                      </v-layout>
-                    </v-card>
-                  </v-menu>
-                  <!-- play, skip, shuffle btn-->
+                  <div
+                    @mouseenter="hover = true"
+                    @mouseleave="hover = false"
+                  >
+                    <v-layout row align-center justify-center>
+                      <v-flex>
+                        <v-btn
+                          icon
+                          @click="mute"
+                        ><v-icon>{{ volumeIcon }}</v-icon>
+                        </v-btn>
+                      </v-flex>
+                      <transition name="volume" tag="v-flex" class="pr-3">
+                        <v-slider
+                          v-if="hover"
+                          v-model="volume"
+                          style="width: 75px"
+                          class="ml-1 mt-1 pt-3"
+                          color="pink lighten-3"
+                        ></v-slider>
+                      </transition>
+                    </v-layout>
+                  </div>
+                  <!-- play btn-->
                   <v-btn
                     icon
-                    v-for="icon in leftIcons"
-                    :key="icon.key"
-                    @click="func(icon.key)"
+                    @click="playOrPause(nowState)"
                     class="mr-2"
-                  ><v-icon>{{ icon.kind }}</v-icon>
+                  ><v-icon>{{ nowState == 'paused' ? 'play_arrow' : 'pause' }}</v-icon>
+                  </v-btn>
+                  <!-- skip btn  -->
+                  <v-btn
+                    icon
+                    @click="skip"
+                    class="mr-2"
+                  ><v-icon>skip_next</v-icon>
+                  </v-btn>
+                  <!-- shuffle btn -->
+                  <v-btn
+                    icon
+                    @click="shuffle"
+                    class="mr-2"
+                  ><v-icon>shuffle</v-icon>
                   </v-btn>
                   <!-- repeat btn -->
                   <v-btn
@@ -66,17 +70,11 @@
                     @click="repeat"
                   ><v-icon :disabled="!repeatCount">{{ repeatIcon }}</v-icon>
                   </v-btn>
-                </v-toolbar-items>
-              </v-flex>
-              <v-spacer></v-spacer>
-              <v-flex xs4>
-                <v-toolbar-items>
-                  <!-- marquee text -->
-                  <v-layout align-center v-show="!$vuetify.breakpoint.xs">
-                    <v-flex class="marquee-title">
-                      <div>{{ title }}</div>
-                    </v-flex>
-                  </v-layout>
+                  <v-spacer></v-spacer>
+                  <!-- marquee text-->
+                  <div class="marquee-title my-auto">
+                    <div>{{ title }}</div>
+                  </div>
                   <!-- love btn -->
                   <v-btn
                     icon
@@ -118,12 +116,13 @@
                     </v-card>
                   </v-menu>
                   <!-- theme btn -->
-                  <v-switch
-                    v-model="theme"
-                    hide-details
-                    color="grey darken-1"
-                    class="mt-2"
-                  ></v-switch>
+                  <div style="width: 40px"  class="my-auto pb-1">
+                    <v-switch
+                      v-model="theme"
+                      hide-details
+                      color="grey darken-1"
+                    ></v-switch>
+                  </div>
                 </v-toolbar-items>
               </v-flex>
             </v-layout>
@@ -140,11 +139,7 @@ export default {
 		nowTime: 0,
 		interval: 0,
 		theme: false,
-		leftIcons: [
-			{ key: 1, kind: 'play_arrow'},
-			{ key: 2, kind: 'skip_next'},
-			{ key: 3, kind: 'shuffle'},
-		],
+    hover: false,
 		rightIcons: [
 			{ key: 6, kind: 'favorite'},
 			{ key: 7, kind: 'playlist_play'},
@@ -158,6 +153,11 @@ export default {
 		isFavorite: false,
 		isClose: false,
 	}),
+  computed: {
+    nowState() {
+      return this.$store.state.nowState
+    }
+  },
   props: {
     width: {type: Number, required: true}
   },
@@ -176,6 +176,10 @@ export default {
 			else if(this.volume == 0) this.volumeIcon = "volume_off"
 			else this.volumeIcon = "volume_down"
 		},
+    isPlay: function(newstate) {
+      if(newstate) this.$store.dispatch('sendAsResume')
+      else this.$store.dispatch('sendAsPause')
+    }
 	},
 	methods: {
 		startProgress() {
@@ -189,17 +193,6 @@ export default {
 				this.volumeBuff = this.volume
 				this.volume = 0
 			}else this.volume = this.volumeBuff
-
-		},
-		func(key) {
-			switch(key){
-				case 1:
-					break;
-				case 2:
-					break;
-				case 3:
-					break;
-			}
 		},
 		repeat() {
 			this.repeatCount++
@@ -208,8 +201,17 @@ export default {
 				this.repeatCount = 0
 				this.repeatIcon = 'repeat'
 			}
-		}
-
+		},
+    skip() {
+      this.$store.dispatch('sendAsSkip')
+    },
+    playOrPause(nowState) {
+      if(nowState == 'paused') this.$store.dispatch('sendAsResume')
+      else this.$store.dispatch('sendAsPause')
+    },
+    shuffle() {
+      this.$store.dispatch('sendAsShuffle')
+    }
 	},
 }
 </script>
@@ -223,12 +225,21 @@ export default {
 	white-space: nowrap;
 	animation-name: marquee;
 	animation-duration: 15s;
-	animation-timing-function: ease-in-out;
+	animation-timing-function: ease-in;
 	animation-iteration-count: infinite;
 }
 @keyframes marquee {
 	from { transform:translateX(0); }
 	99%,to { transform:translateX(-100%); }
+}
+.volume-enter-active, .volume-leave-active {
+  transition: .5s ease-in-out;
+}
+.volume-enter, .volume-leave-to {
+  opacity: 0;
+}
+.volume-leave, .volume-enter-to {
+  opacity: 1;
 }
 </style>
 

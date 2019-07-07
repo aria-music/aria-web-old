@@ -156,14 +156,14 @@ export default {
       if(this.newName == "") this.error = true
       else {
         this.dialog = false
-        this.$store.dispatch('sendWithPlaylists', this.newName)
+        this.$store.dispatch('sendAsNewplaylist', this.newName)
       }
     },
     selectPlaylist(list) {
       this.$emit('selectPlaylist', list)
       this.$router.push('playlist')
-    }
-  }
+    },
+  },
 }
 </script>
 <style>

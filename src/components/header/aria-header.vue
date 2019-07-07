@@ -64,15 +64,10 @@ export default {
       this.$router.push('/')
     },
     sendWithSearch(text) {
-      this.$store.dispatch('sendWithSearch', text)
+      this.$store.dispatch('sendAsSearch', text)
       this.text = ""
       this.$router.push('/search')
     }
   }
 }
 </script>
-<style>
-.header {
-  width: 100%;
-}
-</style>

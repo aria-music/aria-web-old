@@ -11,7 +11,6 @@ const lists = require("./playlist-sample.json")
 let sendJson = {
     op: '',
     key: '',
-    data: null
 }
 
 const decoder = new OpusToPCM({ channels: 2 })
@@ -19,11 +18,11 @@ let context = new AudioContext()
 let playing = 0.0
 let session_key
 
-let ws = new WebSocket('wss://sarisia.cc/aria/player')
+let ws = new WebSocket('wss://sarisia.cc/player/')
 let audio = null
 
 ws.onopen = (event) => {
-    audio = new WebSocket('wss://sarisia.cc/stream/stream')
+    audio = new WebSocket('wss://sarisia.cc/stream/')
     audio.binaryType = "arraybuffer"
     audio.onopen = (event) => {
         audio.send(session_key)
@@ -36,10 +35,11 @@ ws.onopen = (event) => {
 
 ws.onmessage = (event) => {
     const container = JSON.parse(event.data)
-    switch (container.res) {
+    switch (container.type) {
         case 'hello':
             session_key = container.key
             sendJson.key = session_key
+            store.dispatch('fetchPlaylists')
             break
 
         case 'search':
@@ -47,8 +47,17 @@ ws.onmessage = (event) => {
             break
 
         case 'playlists':
-            // store.commit('storePlaylists', container.data)
+            store.commit('storePlaylists', container.data.playlists)
             break
+
+        case 'event_queue_change':
+            store.commit('changeQueue', container.data)
+            break
+
+        case 'event_player_state_change':
+            store.commit('changeState', container.data)
+            break
+
     }
 }
 
@@ -70,7 +79,7 @@ decoder.on('decode', (decoded) => {
 let sendToSocket = (op, data) => {
     let Json = sendJson
     Json.op = op
-    Json.data = data
+    if(data) Json.data = data
     ws.send(JSON.stringify(Json))
 }
 
@@ -80,15 +89,9 @@ const store = new Vuex.Store({
         searchedData: null,
         searchContents: "",
         playingData: { key: "", source: "", title: "", uri: "", thumbnail: "", entry: null },
-        queue: newData.map((property, index) => {
-            property.key = index
-            return property
-        }),
-        playlists: lists.map((property, index) => {
-            property.index = index
-            property.kind = 'playlist'
-            return property
-        })
+        nowState: 'stopped',
+        queue: [],
+        playlists: [],
     },
     getters: {
         //
@@ -99,9 +102,6 @@ const store = new Vuex.Store({
         },
         nowPlaying(state, selectedElement) {
             state.playingData = selectedElement
-        },
-        setQueue(state, queue) {
-            state.queue = queue
         },
         storeSearchResult(state, result) {
             state.searchedData = result.map((property, index) => {
@@ -118,15 +118,52 @@ const store = new Vuex.Store({
                 property.kind = 'playlist'
                 return property
             })
-        }
+        },
+        changeState(state, result) {
+            if(result.entry != null) state.playingData = result.entry
+            state.nowState = result.state
+        },
+        changeQueue(state, result) {
+            state.queue = result.queue.map((property, index) => {
+                property.index = index
+                return property
+            })
+        },
     },
     actions: {
-        sendWithSearch(state, text) {
+        sendAsSearch({}, text) {
             this.commit('getSearchContents', text)
             sendToSocket('search', { query: text })
         },
-        sendWithPlaylists(state, newName) {
+        sendAsNewplaylist({}, newName) {
             sendToSocket('create_playlist', { name: newName })
+        },
+        sendAsPlay({}, playUri) {
+            sendToSocket('play', { uri: playUri })
+        },
+        sendAsQueue({}, playUri) {
+            sendToSocket('queue', { uri: playUri })
+        },
+        sendAsPause() {
+            sendToSocket('pause')
+        },
+        sendAsResume() {
+            sendToSocket('resume')
+        },
+        fetchPlaylists() {
+            sendToSocket('playlists')
+        },
+        sendAsSkip() {
+            sendToSocket('skip')
+        },
+        sendAsListQueue({}, queue) {
+            sendToSocket('list_queue', queue)
+        },
+        sendAsShuffle() {
+            sendToSocket('shuffle')
+        },
+        sendAsRemoveFromQueue({}, element){
+            sendToSocket('remove', { uri: element.uri, index: element.index})
         }
     }
 })

@@ -16,13 +16,11 @@
             <li
               class="list-group-item my-1"
               v-for="element in queue"
-              :key="element.key"
-              @click="goPlaylist(element)"
+              :key="element.index"
             >
               <v-card
                 class="mx-2 pa-0 card"
                 flat
-                :class="nowPlaying.key == element.key ? (theme ? 'teal accent-4' : 'pink lighten-5') : ''"
               >
                 <v-layout row align-center>
                   <v-flex xs2 pa-0>
@@ -52,10 +50,14 @@
                           <v-icon small>fas fa-ellipsis-v</v-icon>
                         </v-btn>
                       </template>
-                      <v-list>
+                      <v-list
+                        class="py-0"
+                      >
                         <v-list-tile
                           v-for="item in items"
                           :key="item.order"
+                          class="sub-menu"
+                          @click="subMenuFunc(item.order, element)"
                         >
                           <v-list-tile-title>
                             <div style="font-size: 14px">{{ item.name }}</div>
@@ -92,13 +94,12 @@ const itemList = [
 
 export default {
   display: "Transitions",
-  order: 7,
   components: {
     draggable,
   },
   data: () => ({
     items: itemList.map((name, index) => {
-      return { name, order: index + 1 }
+      return { name, order: index++ }
     }),
     select: false,
     src: 'https://yt3.ggpht.com/a/AGF-l7_Fe-TsDeIJhiIJeH4UvGNGr9VFOHSJytPgkg=s900-mo-c-c0xffffffff-rj-k-no',
@@ -109,7 +110,9 @@ export default {
         return this.$store.state.queue
       },
       set(queue) {
-        this.$store.commit('setQueue', queue)
+        this.$store.dispatch('sendAsListQueue', queue.map((property) => {
+          return property.uri
+        }))
       }
     },
     dragOptions() {
@@ -124,11 +127,22 @@ export default {
   props: {
     theme: {type: Boolean, required: true},
     nowPlaying: {type: Object, required: true},
-
   },
   methods: {
-    goPlaylist(element) {
-      this.$store.commit('nowPlaying', element)
+    // goPlaylist(element) {
+    //   this.$store.commit('nowPlaying', element)
+    // },
+    subMenuFunc(order, element) {
+      switch(order){
+        case 0:
+          break
+        case 1:
+          this.removeFromQueue(element)
+          break
+      }
+    },
+    removeFromQueue(element) {
+      this.$store.dispatch('sendAsRemoveFromQueue', element)
     }
   }
 };
@@ -160,6 +174,9 @@ export default {
 .list-group-item {
   cursor: pointer;
   list-style-type: none;
+}
+.sub-menu:hover {
+  background-color: rgb(175, 175, 175);
 }
 /* .card:hover {
   background-color: lightgray;

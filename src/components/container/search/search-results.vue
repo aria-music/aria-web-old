@@ -4,11 +4,13 @@
       <perfect-scrollbar id="search-result">
         <transition-group name="searched-list">
           <v-card
+            class="searchResults"
             v-for="result in showList"
             :key="result.key"
             height="100"
             width="95%"
             flat
+            @click="playMusic(result)"
           >
             <v-layout row wrap align-center>
               <v-flex xs2>
@@ -111,9 +113,18 @@ export default {
   props: {
     select: {type: String, required: true},
   },
+  methods: {
+    playMusic(music) {
+      this.$store.dispatch("sendAsQueue", music.uri)
+      this.$router.push("/play")
+    }
+  },
 }
 </script>
 <style>
+.searchResults:hover {
+  background-color: rgb(175, 175, 175);
+}
 #search-result {
   position: relative;
   height: calc(100vh - 330px);
