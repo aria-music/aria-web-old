@@ -57,7 +57,6 @@ ws.onmessage = (event) => {
         case 'event_player_state_change':
             store.commit('changeState', container.data)
             break
-
     }
 }
 
@@ -87,6 +86,10 @@ const store = new Vuex.Store({
     state: {
         theme: false,
         searchedData: null,
+        // searchedData: newData.map((property, index) => {
+        //     property.key = index
+        //     return property
+        // }),
         searchContents: "",
         playingData: { key: "", source: "", title: "", uri: "", thumbnail: "", entry: null },
         nowState: 'stopped',

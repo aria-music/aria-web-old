@@ -13,7 +13,7 @@
             @click="playMusic(result)"
           >
             <v-layout row wrap align-center>
-              <v-flex xs2>
+              <v-flex xs>
                 <v-img
                   class="mx-auto"
                   :src="result.thumbnail == '' ? src : result.thumbnail "
@@ -58,11 +58,35 @@
                         </v-btn>
                       </v-flex> -->
                       <v-flex xs1>
-                        <v-btn
-                          icon
-                          flat
-                          ><v-icon small>fas fa-ellipsis-v</v-icon>
-                        </v-btn>
+                        <v-menu
+                          bottom
+                          origin="center center"
+                          transition="scale-transition"
+                        >
+                          <template v-slot:activator="{ on }">
+                            <v-btn
+                              icon
+                              flat
+                              v-on="on"
+                            >
+                              <v-icon small>fas fa-ellipsis-v</v-icon>
+                            </v-btn>
+                          </template>
+                          <v-list
+                            class="py-0"
+                          >
+                            <v-list-tile
+                              v-for="item in items"
+                              :key="item.key"
+                              class="queue-sub-menu"
+                              @click="subSelectMenu(item.key, result)"
+                            >
+                              <v-list-tile-title>
+                                <div style="font-size: 14px">{{ item.content }}</div>
+                              </v-list-tile-title>
+                            </v-list-tile>
+                          </v-list>
+                        </v-menu>
                       </v-flex>
                     </v-layout>
                   </v-flex>
@@ -80,6 +104,10 @@ export default {
   data: () => ({
     showList: null,
     src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
+    items: [
+      { key: 0, content: 'only enqueue'},
+      { key: 1, content: 'flash queue & play'}
+    ]
   }),
   computed: {
     searchedList() {
@@ -116,7 +144,22 @@ export default {
   methods: {
     playMusic(music) {
       this.$store.dispatch("sendAsQueue", music.uri)
-      this.$router.push("/play")
+      this.emitSelectedMusic(music)
+    },
+    subSelectMenu(key, result) {
+      switch(key){
+        case 0:
+          this.$store.dispatch("sendAsQueue", music.uri)
+          this.emitSelectedMusic(result)
+          break
+        case 1:
+          this.$store.dispatch("sendAsPlay", music.uri)
+          this.emitSelectedMusic(result)
+          break
+      }
+    },
+    emitSelectedMusic(music) {
+      this.$emit('selectedMusic', music)
     }
   },
 }
@@ -139,5 +182,8 @@ export default {
 }
 .searched-list-leave-active {
   position: absolute;
+}
+.queue-sub-menu:hover {
+  background-color: rgb(225, 225, 225);
 }
 </style>

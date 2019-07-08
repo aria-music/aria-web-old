@@ -73,7 +73,7 @@
                   <v-spacer></v-spacer>
                   <!-- marquee text-->
                   <div class="marquee-title my-auto">
-                    <div>{{ title }}</div>
+                    <div>{{ nowplayingTitle }}</div>
                   </div>
                   <!-- love btn -->
                   <v-btn
@@ -105,7 +105,7 @@
                       height="500"
                       width="300">
                       <v-card-title>
-                        <strong class="ml-2" style="font-size: 22px">Playlist</strong>
+                        <strong class="ml-2" style="font-size: 22px">Queue</strong>
                         <v-spacer></v-spacer>
                         <v-btn
                           icon
@@ -144,7 +144,6 @@ export default {
 			{ key: 6, kind: 'favorite'},
 			{ key: 7, kind: 'playlist_play'},
 		],
-		title: "水瀬いのり「Catch the Rainbow！」MUSIC VIDEO",
 		volume: 100,
 		volumeBuff: 100,
 		volumeIcon: 'volume_up',
@@ -156,6 +155,15 @@ export default {
   computed: {
     nowState() {
       return this.$store.state.nowState
+    },
+    nowplayingTitle() {
+      const data = this.$store.state.playingData
+      switch(data.source){
+        case 'gpm':
+          return data.entry.title
+        case 'youtube':
+          return data.title
+      }
     }
   },
   props: {

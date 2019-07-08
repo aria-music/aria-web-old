@@ -3,7 +3,7 @@
     <ariaHeader
       :width="width"
     />
-    <div class="mt-5 pt-4 mx-auto" :style="{width: `${width}px`}">
+    <div class="mt-5 pt-3 mx-auto" :style="{width: `${width}px`}">
       <router-link to="/playing"></router-link>
       <router-link to="/searched"></router-link>
       <router-link to="/playlist"></router-link>

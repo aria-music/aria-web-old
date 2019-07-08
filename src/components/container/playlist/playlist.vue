@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid grid-list-md>
+  <v-container fluid grid-list-md mb-5>
     <v-layout row wrap justify-space-around v-resize="onResize">
       <v-flex
         v-for="list in showPlaylists"
