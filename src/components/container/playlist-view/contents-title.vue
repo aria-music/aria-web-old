@@ -30,7 +30,7 @@
             <v-btn
               flat
               key="play"
-              @click="play"
+              @click="playAll"
               class="my-0 py-3"
             >
               <v-icon>play_arrow</v-icon>
@@ -77,8 +77,8 @@ export default {
     title: {type: String, required: true},
   },
   methods: {
-    play() {
-      //
+    playAll() {
+      this.$emit('playAll')
     }
   },
 }

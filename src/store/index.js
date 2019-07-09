@@ -130,7 +130,6 @@ const store = new Vuex.Store({
             state.nowState = result.state
         },
         changeQueue(state, result) {
-            console.log(result)
             state.queue = result.queue.map((property, index) => {
                 property.index = index
                 return property
@@ -150,6 +149,9 @@ const store = new Vuex.Store({
         },
         sendAsPlay({}, playUri) {
             sendToSocket('play', { uri: playUri })
+        },
+        sendAsPlayWithPlaylist({}, list) {
+            sendToSocket('play', { playlist: list })
         },
         sendAsQueue({}, playUri) {
             sendToSocket('queue', { uri: playUri })

@@ -6,6 +6,7 @@
           :theme="theme"
           :thumbnail="playlistContents.entries[1].thumbnail"
           :title="playlistContents.name"
+          v-on:playAll="playAll"
         />
       </v-flex>
       <v-flex d-flex>
@@ -41,6 +42,11 @@ export default {
       })
     }
   },
+  watch: {
+    playlistContent: function() {
+      if(this.playlistContents == []) this.$router.push('/')
+    }
+  },
   components: {
     contentsTitle,
     listContents,
@@ -48,6 +54,9 @@ export default {
   methods: {
     selectContents(element) {
       this.nowSelect = element
+    },
+    playAll() {
+      this.$store.dispatch('sendAsPlayWithPlaylist', this.playlistContents.entries)
     }
   }
 }
