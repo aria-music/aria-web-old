@@ -147,7 +147,6 @@ const store = new Vuex.Store({
     actions: {
         changeVolume({state}, nowVolume) {
             state.volume = nowVolume
-            console.log(state.volume)
             localStorage.setItem('volume', nowVolume)
         },
         sendAsSearch({}, text) {
