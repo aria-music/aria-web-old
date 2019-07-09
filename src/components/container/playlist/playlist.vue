@@ -103,8 +103,7 @@ export default {
       return this.maxBoxSize - (this.playlistsWithAdd.length % this.maxBoxSize)
     }
   },
-  beforeDestroy() {
-    this.$store.dispatch('fetchPlaylists')
+  mounted(){
     this.onResize()
   },
   watch: {
@@ -159,8 +158,12 @@ export default {
       }
     },
     selectPlaylist(list) {
-      this.$store.dispatch('sendAsPlaylist', list.name)
-      this.$router.push('playlist')
+      if(list.length){
+        this.$store.dispatch('sendAsPlaylist', list.name)
+        this.$router.push('/playlist')
+      }else{
+        //
+      }
     },
   },
 }

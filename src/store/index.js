@@ -130,16 +130,14 @@ const store = new Vuex.Store({
             state.nowState = result.state
         },
         changeQueue(state, result) {
+            console.log(result)
             state.queue = result.queue.map((property, index) => {
                 property.index = index
                 return property
             })
         },
         storePlaylistContents(state, contents) {
-            state.forcusedPlaylist = contents.map((property, index) => {
-                property.key = index
-                return property
-            })
+            state.forcusedPlaylist = contents
         }
     },
     actions: {

@@ -12,7 +12,7 @@
         <v-flex>
           <listContents
             :theme="theme"
-            :contents="playlistContents.entries"
+            :contents="entries"
           />
         </v-flex>
       </v-flex>
@@ -33,6 +33,12 @@ export default {
     },
     playlistContents() {
       return this.$store.state.forcusedPlaylist
+    },
+    entries() {
+      return this.playlistContents.entries.map((property, index) => {
+        property.key = index
+        return property
+      })
     }
   },
   components: {

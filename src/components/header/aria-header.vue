@@ -66,6 +66,7 @@ export default {
   methods: {
     goPlaylist() {
       this.$router.push('/')
+      this.$store.dispatch('fetchPlaylists')
     },
     sendWithSearch(text) {
       this.$store.dispatch('sendAsSearch', text)

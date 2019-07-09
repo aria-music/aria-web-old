@@ -7,7 +7,7 @@
       :class="theme ? 'grey lighten-3' : 'grey darken-3'"
     >
       <v-img
-        :src="thumbnail"
+        :src="thumbnail == '' ? '' : thumbnail"
         contain
         class="img-size"
         :aspect-ratio="1/1"

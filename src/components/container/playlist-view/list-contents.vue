@@ -7,13 +7,13 @@
     <div id="playlist-contents">
       <perfect-scrollbar>
         <v-card
-          class="list-group-item my-1"
+          class="list-group-item my-1 mx-0"
           v-for="element in contents"
           :key="element.key"
           @click="selectContent(element)"
           flat
         >
-          <v-layout row align-center>
+          <v-layout row align-center ma-0>
             <v-flex xs2 pa-0>
               <v-img
                 class="ma-auto"
@@ -27,7 +27,7 @@
             <v-flex xs8>
               <strong>{{ element.title }}</strong>
             </v-flex>
-            <v-flex xs1 offset-xs1>
+            <v-flex xs1>
               <v-menu
                 bottom
                 origin="center center"
@@ -102,7 +102,7 @@ export default {
   height: 100%;
   width: 100%;
 }
-.flip-list-move {
+/* .flip-list-move {
   transition: transform 0.5s;
 }
 .no-move {
@@ -117,7 +117,7 @@ export default {
 .list-group-item {
   cursor: pointer;
   list-style-type: none;
-}
+} */
 /* .card:hover {
   background-color: lightgray;
 } */
