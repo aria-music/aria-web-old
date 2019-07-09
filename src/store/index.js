@@ -105,6 +105,7 @@ const store = new Vuex.Store({
         queue: [],
         playlists: [],
         forcusedPlaylist: [],
+        volume: 100,
     },
     getters: {
         //
@@ -144,6 +145,9 @@ const store = new Vuex.Store({
         }
     },
     actions: {
+        changeVolume({state}, nowVolume) {
+            state.volume = nowVolume
+        },
         sendAsSearch({}, text) {
             this.commit('getSearchContents', text)
             sendToSocket('search', { query: text })
