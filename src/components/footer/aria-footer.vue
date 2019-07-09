@@ -70,7 +70,6 @@
                     @click="repeat"
                   ><v-icon :disabled="!repeatCount">{{ repeatIcon }}</v-icon>
                   </v-btn>
-                  {{ nowVolume }}
                   <v-spacer @click="goPlay"></v-spacer>
                   <!-- marquee text-->
                   <div class="marquee-title my-auto">
