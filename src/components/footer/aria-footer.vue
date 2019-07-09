@@ -139,6 +139,9 @@ export default {
           return data.title
       }
     },
+    nowVolume() {
+      return this.$store.state.volume
+    }
   },
   components: {
     subQueue,
@@ -160,6 +163,7 @@ export default {
 			if(this.volume >= 50) this.volumeIcon = "volume_up"
 			else if(this.volume == 0) this.volumeIcon = "volume_off"
 			else this.volumeIcon = "volume_down"
+      this.$store.dispatch('changeVolume', this.volume)
 		},
     isPlay: function(newstate) {
       if(newstate) this.$store.dispatch('sendAsResume')
