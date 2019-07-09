@@ -15,6 +15,7 @@ let sendJson = {
 
 const decoder = new OpusToPCM({ channels: 2 })
 let context = new AudioContext()
+let GainNode = context.createGain()
 let playing = 0.0
 let session_key
 
@@ -76,7 +77,8 @@ ws.onerror = () => {
 decoder.on('decode', (decoded) => {
     let audioSource = context.createBufferSource()
     audioSource.buffer = decoded
-    audioSource.connect(context.destination)
+    audioSource.connect(GainNode)
+    GainNode.connect(context.destination)
 
     console.log(AudioBuffer.duration)
     if (context.currentTime < playing) {
