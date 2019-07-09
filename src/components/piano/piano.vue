@@ -38,19 +38,18 @@ export default {
         ]
     }),
     created() {
-        this.addEventListener('keydown', (event) => {
+        window.addEventListener('keydown', (event) => {
             this.piano(this.getPianoFile(event.keyCode))
         }),
-        this.addEventListener('keyup', (event) => {
-            if(event.keyCode === 32) {
-                this.onSpace = false
-            }
+        window.addEventListener('keyup', (event) => {
+            if(event.keyCode === 32) this.onSpace = false
         })
     },
     methods: {
         piano(file) {
             if(file === 'Unregistered') return ''
             let sound = new Audio(require('@/components/piano/pianosound/' + file))
+            sound.volume = 0.05
             sound.playbackRate = this.onSpace ? 0.6 : 1
             sound.play()
         },

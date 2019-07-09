@@ -23,6 +23,7 @@ let ws = new WebSocket('wss://sarisia.cc/player/')
 let audio = null
 
 ws.onopen = (event) => {
+    store.commit('setVolume', localStorage.getItem('volume'))
     audio = new WebSocket('wss://sarisia.cc/stream/')
     audio.binaryType = "arraybuffer"
     audio.onopen = (event) => {
@@ -88,7 +89,6 @@ decoder.on('decode', (decoded) => {
         audioSource.start(context.currentTime)
         playing = context.currentTime + AudioBuffer.duration
     }
-    store.commit('setVolume', localStorage.getItem('volume'))
 })
 
 let sendToSocket = (op, data) => {
