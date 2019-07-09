@@ -160,6 +160,7 @@ export default {
 			if(this.volume >= 50) this.volumeIcon = "volume_up"
 			else if(this.volume == 0) this.volumeIcon = "volume_off"
 			else this.volumeIcon = "volume_down"
+      this.$store.commit('setVolume', this.volume)
       this.$store.dispatch('changeVolume', this.volume)
 		},
     isPlay: function(newstate) {

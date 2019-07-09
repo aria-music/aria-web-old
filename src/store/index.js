@@ -88,6 +88,7 @@ decoder.on('decode', (decoded) => {
         audioSource.start(context.currentTime)
         playing = context.currentTime + AudioBuffer.duration
     }
+    store.commit('setVolume', localStorage.getItem('volume'))
 })
 
 let sendToSocket = (op, data) => {
@@ -144,6 +145,9 @@ const store = new Vuex.Store({
         },
         storePlaylistContents(state, contents) {
             state.forcusedPlaylist = contents
+        },
+        setVolume({}, volume){
+            GainNode.gain.value = volume / 100
         }
     },
     actions: {
