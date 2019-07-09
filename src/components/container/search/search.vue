@@ -1,8 +1,5 @@
 <template>
   <div>
-    <toast
-      :text="title"
-    />
     <v-container fluid grid-list-md style="position: relative">
       <v-layout column wrap>
         <v-flex>
@@ -74,7 +71,8 @@
 </template>
 <script>
 import results from '@/components/container/search/search-results'
-import toast from '@/components/options/toaster'
+import toast from '@/components/options/toastCore'
+let slicetext = require('@/components/options/slicetext')
 
 export default {
   data: () => ({
@@ -84,7 +82,6 @@ export default {
       {key: 2, value: 'Google play music', selecter: 'gpm', icon: 'fab fa-google-play', color: 'orange accent-3'},
     ],
     select: 'everything',
-    title: null,
   }),
   computed: {
     searchContents() {
@@ -100,7 +97,8 @@ export default {
       this.select = 'everything'
     },
     selectedMusic(music) {
-      this.title = music.title
+      const title = music.title.length > 22 ? slicetext(music.title, 22) : music.title
+      toast(title)
     }
   }
 }

@@ -1,18 +1,16 @@
 <template>
   <v-snackbar
     v-model="active"
-    right
     top
     color="pink accent-2"
-    :timeout=9000
-    class="toast"
+    :timeout=1500
   >
     <v-icon
       icon
       small
     >fas fa-plus</v-icon>
     <div class="toast-text ml-2 mr-auto">
-      <strong>add  {{ text }}</strong>
+      <strong>{{ text }}</strong>
     </div>
   </v-snackbar>
 </template>
@@ -22,24 +20,24 @@ export default {
     active: false,
   }),
   props: {
-    text: {type: String, defualt: null}
+    text: {type: String, defualt: ""}
   },
   watch: {
-    text: function(newText) {
-      if(newText != null) this.showToast()
+    active: function (isActive, wasActive) {
+      this.$emit('statusChange', isActive, wasActive)
     }
   },
   mounted() {
-    this.$nextTick(() => this.showToast())
+    this.$nextTick(() => this.show())
   },
   methods: {
-    showToast() {
+    show() {
       this.active = true
     },
-    closeToast() {
+    close() {
       this.active = false
     }
-  },
+  }
 }
 </script>
 <style>

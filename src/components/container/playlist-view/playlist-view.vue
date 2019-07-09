@@ -4,13 +4,15 @@
       <v-flex shrink>
         <contentsTitle
           :theme="theme"
+          :thumbnail="playlistContents.entries[1].thumbnail"
+          :title="playlistContents.name"
         />
       </v-flex>
       <v-flex d-flex>
         <v-flex>
           <listContents
             :theme="theme"
-            v-on:selectContents="selectContents"
+            :contents="playlistContents.entries"
           />
         </v-flex>
       </v-flex>
@@ -28,6 +30,9 @@ export default {
   computed: {
     theme() {
       return this.$store.state.theme
+    },
+    playlistContents() {
+      return this.$store.state.forcusedPlaylist
     }
   },
   components: {

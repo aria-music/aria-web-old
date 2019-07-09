@@ -10,10 +10,9 @@
             height="100"
             width="95%"
             flat
-            @click="playMusic(result)"
           >
             <v-layout row wrap align-center>
-              <v-flex xs>
+              <v-flex xs2 @click="playMusic(result)">
                 <v-img
                   class="mx-auto"
                   :src="result.thumbnail == '' ? src : result.thumbnail "
@@ -23,7 +22,7 @@
                   :aspect-ratio="1/1"
                 ></v-img>
               </v-flex>
-              <v-flex xs10>
+              <v-flex xs9 @click="playMusic(result)">
                 <v-layout column>
                   <v-flex>
                     <v-card-title class="pl-1 py-0">
@@ -57,41 +56,39 @@
                           <v-icon v-else>favorite_border</v-icon>
                         </v-btn>
                       </v-flex> -->
-                      <v-flex xs1>
-                        <v-menu
-                          bottom
-                          origin="center center"
-                          transition="scale-transition"
-                        >
-                          <template v-slot:activator="{ on }">
-                            <v-btn
-                              icon
-                              flat
-                              v-on="on"
-                            >
-                              <v-icon small>fas fa-ellipsis-v</v-icon>
-                            </v-btn>
-                          </template>
-                          <v-list
-                            class="py-0"
-                          >
-                            <v-list-tile
-                              v-for="item in items"
-                              :key="item.key"
-                              class="queue-sub-menu"
-                              @click="subSelectMenu(item.key, result)"
-                            >
-                              <v-list-tile-title>
-                                <div style="font-size: 14px">{{ item.content }}</div>
-                              </v-list-tile-title>
-                            </v-list-tile>
-                          </v-list>
-                        </v-menu>
-                      </v-flex>
                     </v-layout>
                   </v-flex>
                 </v-layout>
               </v-flex>
+              <v-menu
+                bottom
+                origin="center center"
+                transition="scale-transition"
+              >
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    icon
+                    flat
+                    v-on="on"
+                  >
+                    <v-icon small>fas fa-ellipsis-v</v-icon>
+                  </v-btn>
+                </template>
+                <v-list
+                  class="py-0"
+                >
+                  <v-list-tile
+                    v-for="item in items"
+                    :key="item.key"
+                    class="queue-sub-menu"
+                    @click="subSelectMenu(item.key, result)"
+                  >
+                    <v-list-tile-title>
+                      <div style="font-size: 14px">{{ item.content }}</div>
+                    </v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
             </v-layout>
           </v-card>
         </transition-group>
@@ -146,15 +143,15 @@ export default {
       this.$store.dispatch("sendAsQueue", music.uri)
       this.emitSelectedMusic(music)
     },
-    subSelectMenu(key, result) {
+    subSelectMenu(key, music) {
       switch(key){
         case 0:
           this.$store.dispatch("sendAsQueue", music.uri)
-          this.emitSelectedMusic(result)
+          this.emitSelectedMusic(music)
           break
         case 1:
           this.$store.dispatch("sendAsPlay", music.uri)
-          this.emitSelectedMusic(result)
+          this.emitSelectedMusic(music)
           break
       }
     },

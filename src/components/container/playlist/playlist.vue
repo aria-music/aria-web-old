@@ -8,17 +8,16 @@
         <transition name="playlists">
           <v-card
             v-if="list.kind == 'playlist'"
-            class="mx-auto"
+            class="mx-auto playlist"
             width="280px"
             height="280px"
-            :img="list.img"
-            style="transition: all 1.0s;"
+            :img="list.thumbnails[1]"
             @click="selectPlaylist(list)"
           >
             <v-layout align-center fill-height>
               <v-flex>
-                <v-card-text>
-                  {{ list.name }}
+                <v-card-text class="playlist-name">
+                  {{ list.name }} - {{ list.length }}曲
                 </v-card-text>
               </v-flex>
             </v-layout>
@@ -94,26 +93,18 @@ export default {
     newName: "",
     dialog: false,
     error: false,
+    playlistsWithAdd: [],
   }),
   computed: {
     playlists() {
       return this.$store.state.playlists
     },
-    playlistsWithAdd() {
-      let lists = this.playlists.map((property) => {
-        return property
-      })
-      lists.push({
-        index: lists.length,
-        kind: 'add'
-      })
-      return lists
-    },
     decoyNum() {
       return this.maxBoxSize - (this.playlistsWithAdd.length % this.maxBoxSize)
     }
   },
-  mounted() {
+  beforeDestroy() {
+    this.$store.dispatch('fetchPlaylists')
     this.onResize()
   },
   watch: {
@@ -123,7 +114,15 @@ export default {
         this.error = false
       }
     },
-    playlistsWithAdd: function() {
+    playlists: function() {
+      let lists = this.playlists.map((property) => {
+        return property
+      })
+      lists.push({
+        index: lists.length,
+        kind: 'add'
+      })
+      this.playlistsWithAdd = lists
       this.onResize()
     }
   },
@@ -160,13 +159,23 @@ export default {
       }
     },
     selectPlaylist(list) {
-      this.$emit('selectPlaylist', list)
+      this.$store.dispatch('sendAsPlaylist', list.name)
       this.$router.push('playlist')
     },
   },
 }
 </script>
 <style>
+.playlist {
+  transition: all 1.0s;
+  opacity: 0.8;
+}
+.playlist-name {
+  font-size: 24px;
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+  text-shadow: 0px 0px 10px rgb(255, 255, 255) ;
+}
 .playlists-enter, .playlists-leave-to {
   opacity: 0;
 }

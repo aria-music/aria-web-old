@@ -4,70 +4,57 @@
       <strong style="font-size: 20px;">Contents</strong>
       <v-icon class="ml-2">fas fa-forward</v-icon>
     </v-card-title>
-    <div id="playing-list">
+    <div id="playlist-contents">
       <perfect-scrollbar>
-        <draggable
-          class="list-group"
-          v-model="queue"
-          v-bind="dragOptions"
-          handle=".handle"
+        <v-card
+          class="list-group-item my-1"
+          v-for="element in contents"
+          :key="element.key"
+          @click="selectContent(element)"
+          flat
         >
-          <transition-group type="transition" name="null">
-            <li
-              class="list-group-item my-1"
-              v-for="element in queue"
-              :key="element.key"
-              @click="selectContents(element)"
-            >
-              <v-card
-                class="mx-2 pa-0 card"
-                flat
+          <v-layout row align-center>
+            <v-flex xs2 pa-0>
+              <v-img
+                class="ma-auto"
+                :src="element.thumbnail == '' ? src : element.thumbnail "
+                contain
+                max-height="50"
+                max-width="50"
+                :aspect-ratio="1/1"
+              ></v-img>
+            </v-flex>
+            <v-flex xs8>
+              <strong>{{ element.title }}</strong>
+            </v-flex>
+            <v-flex xs1 offset-xs1>
+              <v-menu
+                bottom
+                origin="center center"
+                transition="scale-transition"
               >
-                <v-layout row align-center>
-                  <v-flex xs2 pa-0>
-                    <v-img
-                      class="ma-auto"
-                      :src="element.thumbnail == '' ? src : element.thumbnail "
-                      contain
-                      max-height="50"
-                      max-width="50"
-                      :aspect-ratio="1/1"
-                    ></v-img>
-                  </v-flex>
-                  <v-flex xs8>
-                    <strong>{{ element.title }}</strong>
-                  </v-flex>
-                  <v-flex xs1 offset-xs1>
-                    <v-menu
-                      bottom
-                      origin="center center"
-                      transition="scale-transition"
-                    >
-                      <template v-slot:activator="{ on }">
-                        <v-btn
-                          icon
-                          v-on="on"
-                        >
-                          <v-icon small>fas fa-ellipsis-v</v-icon>
-                        </v-btn>
-                      </template>
-                      <v-list>
-                        <v-list-tile
-                          v-for="item in items"
-                          :key="item.order"
-                        >
-                          <v-list-tile-title>
-                            <div style="font-size: 14px">{{ item.name }}</div>
-                          </v-list-tile-title>
-                        </v-list-tile>
-                      </v-list>
-                    </v-menu>
-                  </v-flex>
-                </v-layout>
-              </v-card>
-            </li>
-          </transition-group>
-        </draggable>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    icon
+                    v-on="on"
+                  >
+                    <v-icon small>fas fa-ellipsis-v</v-icon>
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-tile
+                    v-for="item in items"
+                    :key="item.order"
+                  >
+                    <v-list-tile-title>
+                      <div style="font-size: 14px">{{ item.name }}</div>
+                    </v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
+            </v-flex>
+          </v-layout>
+        </v-card>
       </perfect-scrollbar>
     </div>
   </v-card>
@@ -77,13 +64,11 @@
 import draggable from "vuedraggable"
 
 const itemList = [
-  "Like this video",
-  "Remove from this queue"
+  "Remove from this playlist"
 ]
 
 export default {
   display: "Transitions",
-  order: 7,
   components: {
     draggable,
   },
@@ -92,36 +77,21 @@ export default {
       return { name, order: index + 1 }
     }),
     select: false,
-    src: 'https://yt3.ggpht.com/a/AGF-l7_Fe-TsDeIJhiIJeH4UvGNGr9VFOHSJytPgkg=s900-mo-c-c0xffffffff-rj-k-no',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
   }),
-  computed: {
-    queue() {
-      return this.$store.state.queue
-    },
-    dragOptions() {
-      return {
-        animation: 200,
-        group: "description",
-        disabled: false,
-        ghostClass: "ghost"
-      };
-    },
-  },
-  mounted() {
-    this.selectContents(this.queue[0])
-  },
   props: {
     theme: {type: Boolean, required: true},
+    contents: {type: Array, required: true},
   },
   methods: {
-    selectContents(element) {
-      this.$emit('selectContents', element)
+    selectContent(element) {
+      //
     }
   }
 };
 </script>
 <style>
-#playing-list {
+#playlist-contents {
   position: relative;
   height: calc(100vh - 250px); /* TODO */
   width: 100%;

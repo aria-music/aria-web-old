@@ -70,7 +70,7 @@
                     @click="repeat"
                   ><v-icon :disabled="!repeatCount">{{ repeatIcon }}</v-icon>
                   </v-btn>
-                  <v-spacer></v-spacer>
+                  <v-spacer @click="goPlay"></v-spacer>
                   <!-- marquee text-->
                   <div class="marquee-title my-auto">
                     <div>{{ nowplayingTitle }}</div>
@@ -79,42 +79,13 @@
                   <v-btn
                     icon
                     flat
-                    @click="isFavorite = !isFavorite"
-                    :color="isFavorite ? 'pink lighten-3' : ''"
-                    ><v-icon v-if="isFavorite" color="pink darken-1">favorite</v-icon>
+                    @click="like"
+                    :color="nowPlayingData.is_liked ? 'pink lighten-3' : ''"
+                    ><v-icon v-if="nowPlayingData.is_liked" color="pink darken-1">favorite</v-icon>
                     <v-icon v-else>favorite_border</v-icon>
                   </v-btn>
                   <!-- menu btn -->
-                  <v-menu
-                    v-model="isClose"
-                    :close-on-content-click="false"
-                    top
-                    offset-y
-                    origin="bottom right"
-                    transition="scale-transition"
-                    ><template v-slot:activator="{ on }">
-                      <v-btn
-                        icon
-                        v-on="on"
-                        @click="mute"
-                        class="mr-3"
-                      ><v-icon>playlist_play</v-icon>
-                      </v-btn>
-                    </template>
-                    <v-card
-                      height="500"
-                      width="300">
-                      <v-card-title>
-                        <strong class="ml-2" style="font-size: 22px">Queue</strong>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                          icon
-                          @click="isClose = false"
-                        ><v-icon>clear</v-icon>
-                        </v-btn>
-                      </v-card-title>
-                    </v-card>
-                  </v-menu>
+                  <subQueue/>
                   <!-- theme btn -->
                   <div style="width: 40px"  class="my-auto pb-1">
                     <v-switch
@@ -133,6 +104,8 @@
   </v-footer>
 </template>
 <script>
+import subQueue from './sub-queue-list'
+
 export default {
   name: 'ariaFooter',
 	data: () => ({
@@ -149,22 +122,26 @@ export default {
 		volumeIcon: 'volume_up',
 		repeatCount: 0,
 		repeatIcon: 'repeat',
-		isFavorite: false,
-		isClose: false,
 	}),
   computed: {
     nowState() {
       return this.$store.state.nowState
     },
+    nowPlayingData() {
+      return this.$store.state.playingData
+    },
     nowplayingTitle() {
-      const data = this.$store.state.playingData
+      const data = this.nowPlayingData
       switch(data.source){
         case 'gpm':
           return data.entry.title
         case 'youtube':
           return data.title
       }
-    }
+    },
+  },
+  components: {
+    subQueue,
   },
   props: {
     width: {type: Number, required: true}
@@ -219,6 +196,12 @@ export default {
     },
     shuffle() {
       this.$store.dispatch('sendAsShuffle')
+    },
+    goPlay() {
+      this.$router.push('/play')
+    },
+    like() {
+      this.$store.dispatch('sendAsLike')
     }
 	},
 }
@@ -249,5 +232,9 @@ export default {
 .volume-leave, .volume-enter-to {
   opacity: 1;
 }
+.sub-queue-list {
+  position: relative;
+  height: 430px;
+  width: 100%;
+}
 </style>
-

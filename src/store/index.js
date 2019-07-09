@@ -39,7 +39,6 @@ ws.onmessage = (event) => {
         case 'hello':
             session_key = container.key
             sendJson.key = session_key
-            store.dispatch('fetchPlaylists')
             break
 
         case 'search':
@@ -50,12 +49,22 @@ ws.onmessage = (event) => {
             store.commit('storePlaylists', container.data.playlists)
             break
 
+        case 'playlist':
+            store.commit('storePlaylistContents', container.data)
+
         case 'event_queue_change':
             store.commit('changeQueue', container.data)
             break
 
         case 'event_player_state_change':
             store.commit('changeState', container.data)
+            break
+
+        case 'event_playlists_change':
+            store.commit('storePlaylists', container.data.playlists)
+            break
+
+        case 'event_playlist_entry_change':
             break
     }
 }
@@ -86,15 +95,12 @@ const store = new Vuex.Store({
     state: {
         theme: false,
         searchedData: null,
-        // searchedData: newData.map((property, index) => {
-        //     property.key = index
-        //     return property
-        // }),
         searchContents: "",
         playingData: { key: "", source: "", title: "", uri: "", thumbnail: "", entry: null },
         nowState: 'stopped',
         queue: [],
         playlists: [],
+        forcusedPlaylist: [],
     },
     getters: {
         //
@@ -102,9 +108,6 @@ const store = new Vuex.Store({
     mutations: {
         changeTheme(state, nowTheme) {
             state.theme = nowTheme
-        },
-        nowPlaying(state, selectedElement) {
-            state.playingData = selectedElement
         },
         storeSearchResult(state, result) {
             state.searchedData = result.map((property, index) => {
@@ -132,6 +135,12 @@ const store = new Vuex.Store({
                 return property
             })
         },
+        storePlaylistContents(state, contents) {
+            state.forcusedPlaylist = contents.map((property, index) => {
+                property.key = index
+                return property
+            })
+        }
     },
     actions: {
         sendAsSearch({}, text) {
@@ -165,8 +174,14 @@ const store = new Vuex.Store({
         sendAsShuffle() {
             sendToSocket('shuffle')
         },
-        sendAsRemoveFromQueue({}, element){
+        sendAsRemoveFromQueue({}, element) {
             sendToSocket('remove', { uri: element.uri, index: element.index})
+        },
+        sendAsLike({state}) {
+            sendToSocket('like', { uri: state.playingData.uri })
+        },
+        sendAsPlaylist({}, playlistName) {
+            sendToSocket('playlist', { name: playlistName})
         }
     }
 })

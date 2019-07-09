@@ -69,12 +69,12 @@
 <script>
 export default {
   data: () => ({
-    thumbnail: 'https://yt3.ggpht.com/a/AGF-l7_Fe-TsDeIJhiIJeH4UvGNGr9VFOHSJytPgkg=s900-mo-c-c0xffffffff-rj-k-no',
-    title: 'inoriminase',
     torf: false,
   }),
   props: {
     theme: {type: Boolean, required: true},
+    thumbnail: {type: String, required: true},
+    title: {type: String, required: true},
   },
   methods: {
     play() {

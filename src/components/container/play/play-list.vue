@@ -83,7 +83,6 @@
     </div>
   </v-card>
 </template>
-
 <script>
 import draggable from "vuedraggable"
 
@@ -98,11 +97,11 @@ export default {
     draggable,
   },
   data: () => ({
+    src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
     items: itemList.map((name, index) => {
       return { name, order: index++ }
     }),
     select: false,
-    src: 'https://yt3.ggpht.com/a/AGF-l7_Fe-TsDeIJhiIJeH4UvGNGr9VFOHSJytPgkg=s900-mo-c-c0xffffffff-rj-k-no',
   }),
   computed: {
     queue: {

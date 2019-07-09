@@ -44,9 +44,11 @@
   </v-card>
 </template>
 <script>
+let slicetext = require('@/components/options/slicetext')
+
 export default {
   data: () => ({
-    src: 'https://yt3.ggpht.com/a/AGF-l7_Fe-TsDeIJhiIJeH4UvGNGr9VFOHSJytPgkg=s900-mo-c-c0xffffffff-rj-k-no',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
     showTitle: false,
     items: [
       {key: 1, icon: "fab fa-facebook-f"},
@@ -60,31 +62,7 @@ export default {
   },
   computed: {
     slicedTitle() {
-      let isSlice = false
-      let title = this.nowPlaying.title
-      function strLength(strSrc) {
-        let len = 0, i;
-        strSrc = escape(strSrc)
-        for(i = 0; i < strSrc.length; i++, len++){
-          if(strSrc.charAt(i) == "%"){
-            if(strSrc.charAt(++i) == "u"){
-              i += 3
-              len++
-            }
-            i++
-          }
-        }
-        return len
-      }
-
-      while( strLength(title) > 38 ){
-        title = title.slice(0, title.length-1)
-        isSlice = true
-      }
-      if( isSlice ){
-        title += '...'
-      }
-      return title
+      return slicetext(this.nowPlaying.title, 37)
     },
   },
   methods: {
