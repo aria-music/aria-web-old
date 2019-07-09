@@ -102,7 +102,7 @@ export default {
     showList: null,
     src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
     items: [
-      { key: 0, content: 'only enqueue'},
+      { key: 0, content: 'next play'},
       { key: 1, content: 'flash queue & play'}
     ]
   }),
@@ -146,7 +146,7 @@ export default {
     subSelectMenu(key, music) {
       switch(key){
         case 0:
-          this.$store.dispatch("sendAsQueue", music.uri)
+          this.$store.dispatch("sendAsQueueToHead", music.uri)
           this.emitSelectedMusic(music)
           break
         case 1:

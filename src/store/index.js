@@ -171,6 +171,9 @@ const store = new Vuex.Store({
         sendAsQueue({}, playUri) {
             sendToSocket('queue', { uri: playUri })
         },
+        sendAsQueueToHead({ }, playUri) {
+            sendToSocket('queue', { uri: playUri, head: true})
+        },
         sendAsPause() {
             sendToSocket('pause')
         },
