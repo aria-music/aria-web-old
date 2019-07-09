@@ -117,7 +117,7 @@ export default {
 			{ key: 6, kind: 'favorite'},
 			{ key: 7, kind: 'playlist_play'},
 		],
-		volume: this.nowVolume,
+		volume: localStorage.getItem('volume'),
 		volumeBuff: 100,
 		volumeIcon: 'volume_up',
 		repeatCount: 0,
@@ -139,10 +139,6 @@ export default {
           return data.title
       }
     },
-    nowVolume() {
-      this.volume = this.$store.state.volume
-      return this.volume
-    }
   },
   components: {
     subQueue,

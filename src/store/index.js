@@ -105,7 +105,7 @@ const store = new Vuex.Store({
         queue: [],
         playlists: [],
         forcusedPlaylist: [],
-        volume: localStorage.getItem('volume'),
+        volume: 0,
     },
     getters: {
         //
