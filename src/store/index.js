@@ -69,6 +69,10 @@ ws.onmessage = (event) => {
     }
 }
 
+ws.onerror = () => {
+    ws = new WebSocket('wss://sarisia.cc/player/')
+}
+
 decoder.on('decode', (decoded) => {
     let audioSource = context.createBufferSource()
     audioSource.buffer = decoded
