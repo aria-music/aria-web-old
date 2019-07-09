@@ -7,6 +7,7 @@
       <router-link to="/playing"></router-link>
       <router-link to="/searched"></router-link>
       <router-link to="/playlist"></router-link>
+      <router-link to="/piano"></router-link>
       <router-link to="/"></router-link>
       <router-view></router-view>
     </div>

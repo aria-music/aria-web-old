@@ -4,6 +4,7 @@ import play from '@/components/container/play/play'
 import search from '@/components/container/search/search'
 import playlist from '@/components/container/playlist/playlist'
 import playlistView from '@/components/container/playlist-view/playlist-view'
+import piano from '@/components/piano/piano'
 
 Vue.use(Router)
 
@@ -21,6 +22,10 @@ export default new Router({
     {
       path: '/playlist',
       component: playlistView
+    },
+    {
+      path: '/piano',
+      component: piano
     },
     {
       path: '/',

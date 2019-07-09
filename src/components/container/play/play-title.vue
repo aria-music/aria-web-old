@@ -71,6 +71,7 @@ export default {
         case 1:
           break;
         case 2:
+          this.$router.push('/piano')
           break;
         case 3:
           this.showTitle = !this.showTitle
