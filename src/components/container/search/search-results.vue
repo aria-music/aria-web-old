@@ -102,7 +102,7 @@ export default {
     showList: null,
     src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
     items: [
-      { key: 0, content: 'next play'},
+      { key: 0, content: 'play next'},
       { key: 1, content: 'flash queue & play'}
     ]
   }),

@@ -73,12 +73,13 @@ export default {
   }),
   props: {
     theme: {type: Boolean, required: true},
-    thumbnail: {type: String, required: true},
+    thumbnail: {type: String, default: ""},
     title: {type: String, required: true},
   },
   methods: {
     playAll() {
       this.$emit('playAll')
+      this.$emit('toaster', this.title)
     }
   },
 }

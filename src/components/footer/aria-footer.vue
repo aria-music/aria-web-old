@@ -71,8 +71,25 @@
                   ><v-icon :disabled="!repeatCount">{{ repeatIcon }}</v-icon>
                   </v-btn>
                   <v-spacer @click="goPlay"></v-spacer>
+                  <!-- thumbnail -->
+                  <v-card
+                    height="50"
+                    width="50"
+                    flat
+                    class="my-auto"
+                    @click="goPlay"
+                  >
+                    <v-img
+                      :src="nowPlayingData.thumbnail"
+                      :aspect-ratio="1/1"
+                      contain
+                    ></v-img>
+                  </v-card>
                   <!-- marquee text-->
-                  <div class="marquee-title my-auto">
+                  <div
+                    class="marquee-title my-auto ml-2"
+                    @click="goPlay"
+                  >
                     <div>{{ nowplayingTitle }}</div>
                   </div>
                   <!-- love btn -->
@@ -87,7 +104,7 @@
                   <!-- menu btn -->
                   <subQueue/>
                   <!-- theme btn -->
-                  <div style="width: 40px"  class="my-auto pb-1">
+                  <div style="width: 40px" class="my-auto pb-1">
                     <v-switch
                       v-model="theme"
                       hide-details
@@ -131,11 +148,13 @@ export default {
       return this.$store.state.playingData
     },
     nowplayingTitle() {
-      const data = this.nowPlayingData
+      let data = this.nowPlayingData
       switch(data.source){
         case 'gpm':
           return data.entry.title
         case 'youtube':
+          return data.title
+        case 'soundcloud':
           return data.title
       }
     },

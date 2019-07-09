@@ -109,7 +109,7 @@ export default {
         return this.$store.state.queue
       },
       set(queue) {
-        this.$store.dispatch('sendAsListQueue', queue.map((property) => {
+        this.$store.dispatch('sendAsEditedQueue', queue.map((property) => {
           return property.uri
         }))
       }
@@ -128,9 +128,6 @@ export default {
     nowPlaying: {type: Object, required: true},
   },
   methods: {
-    // goPlaylist(element) {
-    //   this.$store.commit('nowPlaying', element)
-    // },
     subMenuFunc(order, element) {
       switch(order){
         case 0:

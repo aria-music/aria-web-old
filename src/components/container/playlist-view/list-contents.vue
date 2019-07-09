@@ -7,14 +7,13 @@
     <div id="playlist-contents">
       <perfect-scrollbar>
         <v-card
-          class="list-group-item my-1 mx-0"
+          class="playlist-content my-1 mx-0"
           v-for="element in contents"
           :key="element.key"
-          @click="selectContent(element)"
           flat
         >
-          <v-layout row align-center ma-0>
-            <v-flex xs2 pa-0>
+          <v-layout row align-center ma-0 fill-height>
+            <v-flex xs2 pa-0 @click="selectContent(element)">
               <v-img
                 class="ma-auto"
                 :src="element.thumbnail == '' ? src : element.thumbnail "
@@ -24,7 +23,7 @@
                 :aspect-ratio="1/1"
               ></v-img>
             </v-flex>
-            <v-flex xs8>
+            <v-flex xs8 py-2 @click="selectContent(element)">
               <strong>{{ element.title }}</strong>
             </v-flex>
             <v-flex xs1>
@@ -45,6 +44,7 @@
                   <v-list-tile
                     v-for="item in items"
                     :key="item.order"
+                    @click="playlistSubBtn(item.order, element)"
                   >
                     <v-list-tile-title>
                       <div style="font-size: 14px">{{ item.name }}</div>
@@ -64,7 +64,9 @@
 import draggable from "vuedraggable"
 
 const itemList = [
-  "Remove from this playlist"
+  "play next",
+  "flash queue & play",
+  "Remove from this playlist",
 ]
 
 export default {
@@ -74,7 +76,7 @@ export default {
   },
   data: () => ({
     items: itemList.map((name, index) => {
-      return { name, order: index + 1 }
+      return { name, order: index++ }
     }),
     select: false,
     src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
@@ -85,7 +87,25 @@ export default {
   },
   methods: {
     selectContent(element) {
-      //
+      this.$store.dispatch("sendAsQueue", element.uri)
+      this.$emit('toaster', element.title)
+    },
+    playlistSubBtn(order, element) {
+      switch(order){
+        case 0:
+          this.$store.dispatch("sendAsQueueToHead", element.uri)
+          this.$emit('toaster', element.title)
+          break
+
+        case 1:
+          this.$store.dispatch("sendAsPlay", element.uri)
+          this.$emit('toaster', element.title)
+          break
+
+        case 2:
+          this.$emit('removeFromPlaylist', element.uri)
+          break
+      }
     }
   }
 };
@@ -102,23 +122,10 @@ export default {
   height: 100%;
   width: 100%;
 }
-/* .flip-list-move {
-  transition: transform 0.5s;
-}
-.no-move {
-  transition: transform 0s;
-}
-.ghost {
-  opacity: 0.5;
-}
-.list-group {
-  min-height: 20px;
-}
-.list-group-item {
+.playlist-content {
   cursor: pointer;
-  list-style-type: none;
-} */
-/* .card:hover {
-  background-color: lightgray;
-} */
+}
+.playlist-content:hover {
+  background-color: rgb(225, 225, 225);
+}
 </style>

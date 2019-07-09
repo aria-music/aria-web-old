@@ -39,34 +39,42 @@ ws.onmessage = (event) => {
     const container = JSON.parse(event.data)
     switch (container.type) {
         case 'hello':
+            console.log('$fetch hello')
             session_key = container.key
             sendJson.key = session_key
             break
 
         case 'search':
+            console.log('$fetch type = search')
             store.commit('storeSearchResult', container.data)
             break
 
         case 'playlists':
+            console.log('$fetch type = playlists')
             store.commit('storePlaylists', container.data.playlists)
             break
 
         case 'playlist':
+            console.log('$fetch type = playlist')
             store.commit('storePlaylistContents', container.data)
 
         case 'event_queue_change':
+            console.log('$fetch type = event_queue_change')
             store.commit('changeQueue', container.data)
             break
 
         case 'event_player_state_change':
+            console.log('$fetch type = event_player_state_change')
             store.commit('changeState', container.data)
             break
 
         case 'event_playlists_change':
+            console.log('$fetch type = event_playlists_change')
             store.commit('storePlaylists', container.data.playlists)
             break
 
         case 'event_playlist_entry_change':
+            console.log('$fetch type = event_playlist_entry_change')
             break
     }
 }
@@ -92,10 +100,11 @@ decoder.on('decode', (decoded) => {
 })
 
 let sendToSocket = (op, data) => {
-    let Json = sendJson
+    let Json = Object.assign({}, sendJson)
     Json.op = op
     if(data) Json.data = data
     ws.send(JSON.stringify(Json))
+    console.log('$send op = ' + op)
 }
 
 const store = new Vuex.Store({
@@ -186,8 +195,8 @@ const store = new Vuex.Store({
         sendAsSkip() {
             sendToSocket('skip')
         },
-        sendAsListQueue({}, queue) {
-            sendToSocket('list_queue', queue)
+        sendAsEditedQueue({}, newQueue) {
+            sendToSocket('edit_queue', { queue: newQueue })
         },
         sendAsShuffle() {
             sendToSocket('shuffle')
@@ -200,6 +209,10 @@ const store = new Vuex.Store({
         },
         sendAsPlaylist({}, playlistName) {
             sendToSocket('playlist', { name: playlistName})
+        },
+        sendAsRemoveFromPlaylist({ }, { playlistName: playlistName, removeUri: removeUri }){
+            console.log(removeUri)
+            sendToSocket('remove_from_playlist', { name: playlistName, uri: removeUri })
         }
     }
 })

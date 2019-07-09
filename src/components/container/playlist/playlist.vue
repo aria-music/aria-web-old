@@ -11,14 +11,13 @@
             class="mx-auto playlist"
             width="280px"
             height="280px"
-            :img="list.thumbnails[1]"
+            :img="list.thumbnails[`${srcnum}`]"
             @click="selectPlaylist(list)"
           >
             <v-layout align-center fill-height>
               <v-flex>
-                <v-card-text class="playlist-name">
-                  {{ list.name }} - {{ list.length }}曲
-                </v-card-text>
+                <v-card-text class="playlist-name">{{ list.name }}</v-card-text>
+                <v-card-text class="py-0"><strong>{{ list.length }} songs</strong></v-card-text>
               </v-flex>
             </v-layout>
           </v-card>
@@ -88,6 +87,8 @@
 <script>
 export default {
   data: () => ({
+    interval: 0,
+    srcnum: 0,
     maxBoxSize: null,
     showPlaylists: null,
     newName: "",
@@ -103,9 +104,13 @@ export default {
       return this.maxBoxSize - (this.playlistsWithAdd.length % this.maxBoxSize)
     }
   },
-  mounted(){
+  mounted() {
     this.onResize()
-  },
+		this.changeThumbnail()
+	},
+	beforeDestroy () {
+		clearInterval(this.interval)
+	},
   watch: {
     dialog: function(newVal) {
       if(!newVal){
@@ -161,10 +166,14 @@ export default {
       if(list.length){
         this.$store.dispatch('sendAsPlaylist', list.name)
         this.$router.push('/playlist')
-      }else{
-        //
       }
     },
+    changeThumbnail() {
+			this.interval = setInterval(() => {
+				if(this.srcnum == 3) this.srcnum = 0
+        else this.srcnum++
+			}, 5000)
+		},
   },
 }
 </script>
