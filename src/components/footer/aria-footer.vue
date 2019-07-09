@@ -70,6 +70,7 @@
                     @click="repeat"
                   ><v-icon :disabled="!repeatCount">{{ repeatIcon }}</v-icon>
                   </v-btn>
+                  {{ nowVolume }}
                   <v-spacer @click="goPlay"></v-spacer>
                   <!-- marquee text-->
                   <div class="marquee-title my-auto">
@@ -117,7 +118,7 @@ export default {
 			{ key: 6, kind: 'favorite'},
 			{ key: 7, kind: 'playlist_play'},
 		],
-		volume: 100,
+		volume: this.nowVolume,
 		volumeBuff: 100,
 		volumeIcon: 'volume_up',
 		repeatCount: 0,
@@ -140,7 +141,8 @@ export default {
       }
     },
     nowVolume() {
-      return this.$store.state.volume
+      this.volume = this.$store.state.volume
+      return this.volume
     }
   },
   components: {
