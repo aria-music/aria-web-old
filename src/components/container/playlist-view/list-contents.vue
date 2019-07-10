@@ -16,7 +16,7 @@
           width="95%"
           flat
         >
-          <v-layout row align-center ma-0 fill-height>
+          <v-layout row wrap align-center ma-0 fill-height>
             <v-flex xs2 pa-0 @click="selectContent(element)">
               <v-img
                 class="ma-auto"

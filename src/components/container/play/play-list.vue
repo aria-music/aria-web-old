@@ -22,7 +22,7 @@
                 class="mx-2 pa-0 card"
                 flat
               >
-                <v-layout row align-center>
+                <v-layout row align-center wrap>
                   <v-flex xs2 pa-0>
                     <v-img
                       class="ma-auto"
@@ -33,7 +33,7 @@
                       :aspect-ratio="1/1"
                     ></v-img>
                   </v-flex>
-                  <v-flex xs7>
+                  <v-flex xs8>
                     <strong>{{ element.title }}</strong>
                   </v-flex>
                   <v-spacer></v-spacer>
