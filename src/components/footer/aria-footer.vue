@@ -19,30 +19,6 @@
             <v-layout row>
               <v-flex>
                 <v-toolbar-items>
-                  <!-- volume btn -->
-                  <div
-                    @mouseenter="hover = true"
-                    @mouseleave="hover = false"
-                  >
-                    <v-layout row align-center justify-center>
-                      <v-flex>
-                        <v-btn
-                          icon
-                          @click="mute"
-                        ><v-icon>{{ volumeIcon }}</v-icon>
-                        </v-btn>
-                      </v-flex>
-                      <transition name="volume" tag="v-flex" class="pr-3">
-                        <v-slider
-                          v-if="hover"
-                          v-model="volume"
-                          style="width: 75px"
-                          class="ml-1 mt-1 pt-3"
-                          color="pink lighten-3"
-                        ></v-slider>
-                      </transition>
-                    </v-layout>
-                  </div>
                   <!-- play btn-->
                   <v-btn
                     icon
@@ -70,6 +46,32 @@
                     @click="repeat"
                   ><v-icon :disabled="!repeatCount">{{ repeatIcon }}</v-icon>
                   </v-btn>
+                  <!-- volume btn -->
+                  <div
+                    @mouseenter="hover = true"
+                    @mouseleave="hover = false"
+                    class="my-auto"
+                  >
+                    <v-layout row align-center justify-center>
+                      <v-flex>
+                        <v-btn
+                          icon
+                          @click="mute"
+                        ><v-icon>{{ volumeIcon }}</v-icon>
+                        </v-btn>
+                      </v-flex>
+                      <transition name="volume" tag="v-flex" class="pr-3">
+                        <v-slider
+                          v-if="hover"
+                          v-model="volume"
+                          style="width: 75px"
+                          class="ml-1 mt-1 pt-3"
+                          color="pink lighten-3"
+                        ></v-slider>
+                      </transition>
+                    </v-layout>
+                  </div>
+                  <!-- spacer -->
                   <v-spacer @click="goPlay"></v-spacer>
                   <!-- thumbnail -->
                   <v-card
@@ -126,8 +128,8 @@ import subQueue from './sub-queue-list'
 export default {
   name: 'ariaFooter',
 	data: () => ({
-		nowTime: 0,
-		interval: 0,
+    nowTime: 0.0,
+    interval: null,
 		theme: false,
     hover: false,
 		rightIcons: [
@@ -158,6 +160,9 @@ export default {
           return data.title
       }
     },
+    countTime() {
+      return 10 / this.nowPlayingData.duration
+    },
   },
   components: {
     subQueue,
@@ -165,12 +170,12 @@ export default {
   props: {
     width: {type: Number, required: true}
   },
-	mounted() {
-		this.startProgress()
-	},
-	beforeDestroy () {
-		clearInterval(this.interval)
-	},
+  mounted() {
+    this.setIntervalForSeekbar()
+  },
+  beforeDestroy () {
+    clearInterval(this.interval)
+  },
 	watch: {
 		theme: function(nowTheme) {
 			this.$store.commit('changeTheme', nowTheme)
@@ -185,15 +190,12 @@ export default {
     isPlay: function(newstate) {
       if(newstate) this.$store.dispatch('sendAsResume')
       else this.$store.dispatch('sendAsPause')
+    },
+    nowPlayingData: function() {
+      this.nowTime = this.countTime * this.nowPlayingData.position * 10
     }
 	},
 	methods: {
-		startProgress() {
-			this.interval = setInterval(() => {
-				if(this.nowTime > 100) this.nowTime = 0
-				else this.nowTime += 0.05
-			}, 100)
-		},
 		mute() {
 			if(this.volume > 0){
 				this.volumeBuff = this.volume
@@ -222,7 +224,15 @@ export default {
       this.$router.push('/play')
     },
     like() {
-      this.$store.dispatch('sendAsLike')
+      this.$store.dispatch('sendAsLike', this.nowPlayingData.uri)
+    },
+    setIntervalForSeekbar() {
+      this.interval = setInterval(() => {
+        this.progressSeekbar()
+      }, 100)
+    },
+    progressSeekbar() {
+      if(this.nowTime < 100 && this.nowState == 'playing') this.nowTime += this.countTime
     }
 	},
 }

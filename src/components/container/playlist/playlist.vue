@@ -46,31 +46,31 @@
               </v-card>
             </transition>
           </template>
-        <v-card>
-          <v-card-text>
-            <span class="headline">New Playlist</span>
-          </v-card-text>
-          <v-container grid-list-xs>
-            <v-layout row wrap>
-              <v-flex xs12>
-                <v-text-field
-                  v-model="newName"
-                  :error="error"
-                  label="Title"
-                  counter
-                  maxlength="30"
-                ></v-text-field>
-              </v-flex>
-              <v-flex>
-                <v-layout justify-end>
-                  <v-btn flat @click="dialog = false">cancel</v-btn>
-                  <v-btn color="primary" @click="addPlaylist" @keyup.enter="addPlaylist">save</v-btn>
-                </v-layout>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-card>
-      </v-dialog>
+          <v-card @keyup.enter="addPlaylist">
+            <v-card-text>
+              <span class="headline">New Playlist</span>
+            </v-card-text>
+            <v-container grid-list-xs>
+              <v-layout row wrap>
+                <v-flex xs12>
+                  <v-text-field
+                    v-model="newName"
+                    :error="error"
+                    label="Title"
+                    counter
+                    maxlength="30"
+                  ></v-text-field>
+                </v-flex>
+                <v-flex>
+                  <v-layout justify-end>
+                    <v-btn flat @click="dialog = false">cancel</v-btn>
+                    <v-btn color="primary" @click="addPlaylist">save</v-btn>
+                  </v-layout>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-card>
+        </v-dialog>
         <v-card
           v-if="list.kind == 'decoy'"
           class="mx-auto"

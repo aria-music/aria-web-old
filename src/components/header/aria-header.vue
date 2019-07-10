@@ -41,8 +41,9 @@
                   prepend-inner-icon="search"
                   clearable
                   color="pink lighten-3"
-                  @click:prepend-inner="sendWithSearch(text)"
-                  @keydown.enter="sendWithSearch(text)"
+                  @click:prepend-inner="sendWithSearch"
+                  @keyup.enter="sendWithSearch"
+                  @keypress="canMessageSend = true"
                 ></v-text-field>
               </v-flex>
             </v-layout>
@@ -59,6 +60,7 @@ export default {
   data: () => ({
     text: "",
     color: "",
+    canMessageSend: false,
   }),
   props: {
     width: {type: Number, required: true}
@@ -68,10 +70,13 @@ export default {
       this.$router.push('/')
       this.$store.dispatch('fetchPlaylists')
     },
-    sendWithSearch(text) {
-      this.$store.dispatch('sendAsSearch', text)
-      this.text = ""
-      this.$router.push('/search')
+    sendWithSearch() {
+      if(this.canMessageSend){
+        this.canMessageSend = false
+        this.$store.dispatch('sendAsSearch', this.text)
+        this.text = ""
+        this.$router.push('/search')
+      }else return
     }
   }
 }

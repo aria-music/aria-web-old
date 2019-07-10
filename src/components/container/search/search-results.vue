@@ -26,7 +26,7 @@
                 <v-layout column>
                   <v-flex>
                     <v-card-title class="pl-1 py-0">
-                      <strong>{{ result.source == 'youtube' ? result.title : result.entry.title}}</strong>
+                      <strong>{{ result.source == 'youtube' ? (result.title.length > 37 ? result.title.slice(0, 37)+'...' : result.title) : result.entry.title}}</strong>
                     </v-card-title>
                   </v-flex>
                   <v-flex>
@@ -46,49 +46,51 @@
                         </v-card-text>
                       </v-flex>
                       <v-spacer></v-spacer>
-                      <!-- <v-flex xs1>
-                        <v-btn
-                          icon
-                          flat
-                          @click="result.isFavorite = !result.isFavorite"
-                          :color="result.isFavorite ? 'pink lighten-3' : ''"
-                          ><v-icon v-if="result.isFavorite" color="pink darken-1">favorite</v-icon>
-                          <v-icon v-else>favorite_border</v-icon>
-                        </v-btn>
-                      </v-flex> -->
                     </v-layout>
                   </v-flex>
                 </v-layout>
               </v-flex>
-              <v-menu
-                bottom
-                origin="center center"
-                transition="scale-transition"
-              >
-                <template v-slot:activator="{ on }">
-                  <v-btn
-                    icon
-                    flat
-                    v-on="on"
-                  >
-                    <v-icon small>fas fa-ellipsis-v</v-icon>
-                  </v-btn>
-                </template>
-                <v-list
-                  class="py-0"
+              <v-flex>
+                <!-- <v-btn
+                  class="ma-0"
+                  icon
+                  flat
+                  @click="result.isFavorite = !result.isFavorite"
+                  :color="result.isFavorite ? 'pink lighten-3' : ''"
+                  ><v-icon v-if="result.isFavorite" color="pink darken-1">favorite</v-icon>
+                  <v-icon v-else>favorite_border</v-icon>
+                </v-btn> -->
+                <v-menu
+                  bottom
+                  origin="center center"
+                  transition="scale-transition"
                 >
-                  <v-list-tile
-                    v-for="item in items"
-                    :key="item.key"
-                    class="queue-sub-menu"
-                    @click="subSelectMenu(item.key, result)"
+                  <template v-slot:activator="{ on }">
+                    <v-btn
+                      class="ma-0"
+                      icon
+                      flat
+                      v-on="on"
+                    >
+                      <v-icon small>fas fa-ellipsis-v</v-icon>
+                    </v-btn>
+                  </template>
+                  <v-list
+                    class="py-0"
                   >
-                    <v-list-tile-title>
-                      <div style="font-size: 14px">{{ item.content }}</div>
-                    </v-list-tile-title>
-                  </v-list-tile>
-                </v-list>
-              </v-menu>
+                    <v-list-tile
+                      v-for="item in items"
+                      :key="item.key"
+                      class="queue-sub-menu"
+                      @click="subSelectMenu(item.key, result)"
+                    >
+                      <v-list-tile-title>
+                        <div style="font-size: 14px">{{ item.content }}</div>
+                      </v-list-tile-title>
+                    </v-list-tile>
+                  </v-list>
+                </v-menu>
+              </v-flex>
             </v-layout>
           </v-card>
         </transition-group>
@@ -97,6 +99,8 @@
   </v-card>
 </template>
 <script>
+const slicetext = require('@/components/options/slicetext')
+
 export default {
   data: () => ({
     showList: null,

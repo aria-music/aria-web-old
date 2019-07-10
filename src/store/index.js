@@ -156,7 +156,7 @@ const store = new Vuex.Store({
             state.forcusedPlaylist = contents
         },
         setVolume({}, volume){
-            GainNode.gain.value = volume / 200
+            GainNode.gain.value = volume / 3200
         }
     },
     actions: {
@@ -204,14 +204,13 @@ const store = new Vuex.Store({
         sendAsRemoveFromQueue({}, element) {
             sendToSocket('remove', { uri: element.uri, index: element.index})
         },
-        sendAsLike({state}) {
-            sendToSocket('like', { uri: state.playingData.uri })
+        sendAsLike({}, likeUri) {
+            sendToSocket('like', { uri: likeUri })
         },
         sendAsPlaylist({}, playlistName) {
             sendToSocket('playlist', { name: playlistName})
         },
         sendAsRemoveFromPlaylist({ }, { playlistName: playlistName, removeUri: removeUri }){
-            console.log(removeUri)
             sendToSocket('remove_from_playlist', { name: playlistName, uri: removeUri })
         }
     }

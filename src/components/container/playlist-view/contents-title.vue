@@ -17,7 +17,7 @@
       class="mt-3 mx-auto width"
     >
       <v-card-title class="playing-title">
-          {{ title }}
+        {{ title }}
       </v-card-title>
       <v-divider class="mx-3"></v-divider>
       <v-toolbar

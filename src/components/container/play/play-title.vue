@@ -17,11 +17,18 @@
       class="mt-3 mx-auto width"
     >
       <v-card-title class="playing-title" v-if="showTitle">
-          {{ nowPlaying.title }}
+        {{ nowPlaying.title }}
       </v-card-title>
       <v-card-title class="playing-title" v-else>
-          {{ slicedTitle }}
+        {{ slicedTitle }}
       </v-card-title>
+      <v-card-text v-if="showTitle">
+        <v-icon v-if="nowPlaying.source == 'youtube'">fab fa-youtube</v-icon>
+        <v-icon v-if="nowPlaying.source == 'gpm'">fab fa-google-play</v-icon>
+        <v-icon v-if="nowPlaying.source == 'soundcloud'">fab fa-soundcloud</v-icon>
+        <a :href="this.nowPlaying.uri" target="_blank" v-if="jumpUri">{{ this.nowPlaying.uri }}</a>
+        <span v-if="!jumpUri">{{ this.nowPlaying.uri }}</span>
+      </v-card-text>
       <v-divider class="mx-3"></v-divider>
       <v-toolbar
           color="transparent"
@@ -44,11 +51,12 @@
   </v-card>
 </template>
 <script>
-let slicetext = require('@/components/options/slicetext')
+const slicetext = require('@/components/options/slicetext')
 
 export default {
   data: () => ({
     src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
+    jumpUri: false,
     showTitle: false,
     items: [
       {key: 1, icon: "fab fa-facebook-f"},
@@ -64,6 +72,12 @@ export default {
     slicedTitle() {
       return slicetext(this.nowPlaying.title, 37)
     },
+  },
+  watch: {
+    nowPlaying: function() {
+      if(this.nowPlaying.uri.indexOf('http')) this.jumpUri = false
+      else this.jumpUri = true
+    }
   },
   methods: {
     btnFunc(key) {
