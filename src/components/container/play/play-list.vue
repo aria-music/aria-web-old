@@ -123,7 +123,7 @@ export default {
   data: () => ({
     src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
     items: itemList.map((name, index) => {
-      return { name, order: index++ }
+      return { name, order: index }
     }),
     dialog: false,
     color: false,
@@ -168,6 +168,7 @@ export default {
         case 1:
           this.dialog = true
           this.selectedSong = element.uri
+          break
         case 2:
           this.removeFromQueue(element)
           break

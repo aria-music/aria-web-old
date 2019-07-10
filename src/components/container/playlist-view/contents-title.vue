@@ -85,7 +85,7 @@
                     color="error"
                   >fas fa-exclamation-triangle</v-icon>
                   <v-flex xs12>
-                    <span class="headline">Are you sure you wanna delete this playlist <strong>{{ title }}</strong> ?</span>
+                    <span class="headline">Are you sure to delete this playlist <strong>{{ title }}</strong> ?</span>
                   </v-flex>
                   <v-flex>
                     <v-layout justify-end>

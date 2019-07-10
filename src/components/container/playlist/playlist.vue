@@ -17,7 +17,7 @@
             <v-layout align-center fill-height>
               <v-flex>
                 <v-card-text class="playlist-name">{{ list.name }}</v-card-text>
-                <v-card-text class="py-0"><strong>{{ list.length }} songs</strong></v-card-text>
+                <v-card-text class="playlist-length"><strong>{{ list.length }} songs</strong></v-card-text>
               </v-flex>
             </v-layout>
           </v-card>
@@ -184,7 +184,15 @@ export default {
   font-size: 24px;
   font-weight: bold;
   color: rgb(0, 0, 0);
-  text-shadow: 0px 0px 10px rgb(255, 255, 255) ;
+  text-shadow: 0px 0px 10px rgb(255, 255, 255);
+}
+.playlist-length {
+  padding-top: 0;
+  padding-bottom: 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+  text-shadow: 0px 0px 10px rgb(255, 255, 255);
 }
 .playlists-enter, .playlists-leave-to {
   opacity: 0;
