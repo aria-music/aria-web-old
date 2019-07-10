@@ -8,13 +8,12 @@
             v-for="result in showList"
             :key="result.key"
             height="100"
-            width="95%"
             flat
           >
-            <v-layout row wrap align-center>
-              <v-flex xs2 @click="playMusic(result)">
+            <v-layout row wrap align-center fill-height>
+              <v-flex xs2 align-center @click="playMusic(result)">
                 <v-img
-                  class="mx-auto"
+                  class="ma-auto"
                   :src="result.thumbnail == '' ? src : result.thumbnail "
                   contain
                   max-height="80"
@@ -35,10 +34,10 @@
                   <v-flex>
                     <v-layout row>
                       <v-flex xs1 mt-1>
-                        <v-icon>{{ result.source == 'youtube' ? 'fab fa-youtube' : 'fab fa-google-play' }}</v-icon>
+                        <v-icon class="my-0 pa-0">{{ result.source == 'youtube' ? 'fab fa-youtube' : 'fab fa-google-play' }}</v-icon>
                       </v-flex>
                       <v-flex v-if="result.source == 'gpm'">
-                        <v-card-text class="pt-2 pl-0">
+                        <v-card-text class="py-0 pl-0">
                           <v-icon small class="mr-1">fas fa-music</v-icon>
                           <strong>{{ result.entry.artist }}</strong>
                           <v-icon small class="ml-3  mr-1">fas fa-compact-disc</v-icon>
@@ -108,7 +107,7 @@ export default {
     items: [
       { key: 0, content: 'play next'},
       { key: 1, content: 'flash queue & play'}
-    ]
+    ],
   }),
   computed: {
     searchedList() {
@@ -161,7 +160,7 @@ export default {
     },
     emitSelectedMusic(music) {
       this.$emit('selectedMusic', music)
-    }
+    },
   },
 }
 </script>

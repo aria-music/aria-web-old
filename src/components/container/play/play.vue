@@ -10,7 +10,9 @@
       <v-flex d-flex>
         <v-layout column>
           <v-flex>
-            <v-card height="100%">
+            <v-card
+              height="100%"
+            >
               <v-sparkline
                 fill
                 :gradient="['#00c6ff', '#F0F', '#FF0']"
@@ -39,6 +41,7 @@ import playtitle from '@/components/container/play/play-title'
 export default {
   data: () => ({
     value: [0, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0],
+    width: 0,
   }),
   computed: {
     nowPlaying() {

@@ -44,7 +44,7 @@
                   <v-btn
                     icon
                     @click="repeat"
-                  ><v-icon :disabled="!repeatCount">{{ repeatIcon }}</v-icon>
+                  ><v-icon :disabled="!isRepeat">{{ isRepeat ? 'repeat_one' : 'repeat'}}</v-icon>
                   </v-btn>
                   <!-- volume btn -->
                   <div
@@ -139,8 +139,7 @@ export default {
 		volume: localStorage.getItem('volume'),
 		volumeBuff: 100,
 		volumeIcon: 'volume_up',
-		repeatCount: 0,
-		repeatIcon: 'repeat',
+    isRepeat: false,
 	}),
   computed: {
     nowState() {
@@ -193,22 +192,21 @@ export default {
     },
     nowPlayingData: function() {
       this.nowTime = this.countTime * this.nowPlayingData.position * 10
-    }
+    },
 	},
 	methods: {
+    repeat() {
+      this.isRepeat = true
+      this.$store.dispatch('sendAsRepeat', this.nowPlayingData.uri)
+      setTimeout(() => {
+        this.isRepeat = false
+      }, 1000)
+    },
 		mute() {
 			if(this.volume > 0){
 				this.volumeBuff = this.volume
 				this.volume = 0
 			}else this.volume = this.volumeBuff
-		},
-		repeat() {
-			this.repeatCount++
-			if(this.repeatCount == 2) this.repeatIcon = 'repeat_one'
-			else if(this.repeatCount == 3){
-				this.repeatCount = 0
-				this.repeatIcon = 'repeat'
-			}
 		},
     skip() {
       this.$store.dispatch('sendAsSkip')

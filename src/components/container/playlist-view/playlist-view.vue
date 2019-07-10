@@ -16,14 +16,12 @@
         />
       </v-flex>
       <v-flex>
-        <v-flex>
-          <listContents
-            :theme="theme"
-            :contents="entries"
-            v-on:removeFromPlaylist="removeFromPlaylist"
-            v-on:toaster="toaster"
-          />
-        </v-flex>
+        <listContents
+          :theme="theme"
+          :contents="entries"
+          v-on:removeFromPlaylist="removeFromPlaylist"
+          v-on:toaster="toaster"
+        />
       </v-flex>
     </v-layout>
   </v-container>

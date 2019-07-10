@@ -36,7 +36,8 @@
                   <v-flex xs7>
                     <strong>{{ element.title }}</strong>
                   </v-flex>
-                  <v-flex xs1 offset-xs1>
+                  <v-spacer></v-spacer>
+                  <v-flex xs1>
                     <v-menu
                       bottom
                       origin="center center"
@@ -178,7 +179,7 @@ export default {
       this.$store.dispatch('sendAsRemoveFromQueue', element)
     },
     addToPlaylist(playlist) {
-      this.$store.dispatch('sendToAddToPlaylist', { listname: playlist, addedUri: this.selectedSong })
+      this.$store.dispatch('sendAsAddToPlaylist', { listname: playlist, addedUri: this.selectedSong })
       this.dialog = false
     }
   }
@@ -215,7 +216,4 @@ export default {
 .sub-menu:hover {
   background-color: rgb(175, 175, 175);
 }
-/* .card:hover {
-  background-color: lightgray;
-} */
 </style>

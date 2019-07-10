@@ -219,8 +219,11 @@ const store = new Vuex.Store({
         sendAsDeletePlaylist({}, listname) {
             sendToSocket('delete_playlist', { name: listname })
         },
-        sendToAddToPlaylist({}, {listname: listname, addedUri: addedUri}) {
+        sendAsAddToPlaylist({}, {listname: listname, addedUri: addedUri}) {
             sendToSocket('add_to_playlist', { name: listname, uri: addedUri})
+        },
+        sendAsRepeat({}, repeatUri) {
+            sendToSocket('repeat', { uri: repeatUri})
         }
     }
 })

@@ -1,5 +1,8 @@
 <template>
-  <v-card height="100%">
+  <v-card
+    height="100%"
+    width="100%"
+  >
     <v-card-title>
       <strong style="font-size: 20px;">Contents</strong>
       <v-icon class="ml-2">fas fa-forward</v-icon>
@@ -7,9 +10,10 @@
     <div id="playlist-contents">
       <perfect-scrollbar>
         <v-card
-          class="playlist-content my-1 mx-0"
+          class="playlist-content my-1 mx-auto"
           v-for="element in contents"
           :key="element.key"
+          width="95%"
           flat
         >
           <v-layout row align-center ma-0 fill-height>
@@ -26,7 +30,8 @@
             <v-flex xs8 py-2 @click="selectContent(element)">
               <strong>{{ element.title }}</strong>
             </v-flex>
-            <v-flex xs1>
+            <v-spacer></v-spacer>
+            <v-flex>
               <v-menu
                 bottom
                 origin="center center"
@@ -126,6 +131,6 @@ export default {
   cursor: pointer;
 }
 .playlist-content:hover {
-  background-color: rgb(225, 225, 225);
+  background-color: rgb(170, 170, 170);
 }
 </style>
