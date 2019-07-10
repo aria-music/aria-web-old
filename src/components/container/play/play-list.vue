@@ -190,6 +190,7 @@ export default {
   position: relative;
   height: calc(100vh - 450px); /* TODO */
   width: 100%;
+  max-width: 760px;
 }
 .ps {
   position: absolute;

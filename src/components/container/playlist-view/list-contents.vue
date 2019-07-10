@@ -14,6 +14,7 @@
           v-for="element in contents"
           :key="element.key"
           width="95%"
+          max-width="760px"
           flat
         >
           <v-layout row wrap align-center ma-0 fill-height>
