@@ -7,10 +7,12 @@
       >
         <contentsTitle
           :theme="theme"
-          :thumbnail="playlistContents.entries[0].thumbnail || ''"
+          :thumbnail="playlistContents.entries.length == 0 ? src : playlistContents.entries[0].thumbnail"
           :title="playlistContents.name"
           v-on:playAll="playAll"
+          v-on:queueAll="queueAll"
           v-on:toaster="toaster"
+          v-on:deletePlaylist="deletePlaylist"
         />
       </v-flex>
       <v-flex>
@@ -36,6 +38,7 @@ export default {
   data: () => ({
     nowSelect: {},
     hover: false,
+    src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
   }),
   computed: {
     theme() {
@@ -67,6 +70,9 @@ export default {
     playAll() {
       this.$store.dispatch('sendAsPlayWithPlaylist', this.playlistContents.name)
     },
+    queueAll() {
+      this.$store.dispatch('sendAsQueueWithPlaylist', this.playlistContents.name)
+    },
     removeFromPlaylist(removeUri) {
       this.$store.dispatch('sendAsRemoveFromPlaylist', {playlistName: this.playlistContents.name, removeUri: removeUri})
       this.$store.dispatch('sendAsPlaylist', this.playlistContents.name)
@@ -74,6 +80,10 @@ export default {
     toaster(message) {
       const title = message > 22 ? slicetext(message, 22) : message
       toast(title)
+    },
+    deletePlaylist(title) {
+      this.$router.push('/')
+      this.$store.dispatch('sendAsDeletePlaylist', title)
     }
   }
 }

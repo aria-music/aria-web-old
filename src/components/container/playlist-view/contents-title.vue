@@ -7,7 +7,7 @@
       :class="theme ? 'grey lighten-3' : 'grey darken-3'"
     >
       <v-img
-        :src="thumbnail == '' ? '' : thumbnail"
+        :src="thumbnail"
         contain
         class="img-size"
         :aspect-ratio="1/1"
@@ -26,41 +26,77 @@
       >
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <transition-group class="my-auto" name="tandf">
-            <v-btn
-              flat
-              key="play"
-              @click="playAll"
-              class="my-0 py-3"
-            >
-              <v-icon>play_arrow</v-icon>
-              <div class="ml-1 pt-1">play all</div>
-            </v-btn>
-            <v-btn
-              icon
-              key="share"
-              @click="torf = !torf"
-              class="mr-0"
-            >
-              <v-icon>share</v-icon>
-            </v-btn>
-            <v-btn
-              v-if="torf"
-              icon
-              key="twitter"
-              class="mr-0"
-            >
-              <v-icon>fab fa-twitter</v-icon>
-            </v-btn>
-            <v-btn
-              v-if="torf"
-              icon
-              key="facebook"
-              class="mr-0"
-            >
-              <v-icon>fab fa-facebook-square</v-icon>
-            </v-btn>
-          </transition-group>
+          <v-btn
+            flat
+            @click="queueAll"
+            class="my-0 py-3"
+          >
+            <v-icon>fas fa-plus</v-icon>
+            <div class="ml-2 pt-1">Queue</div>
+          </v-btn>
+          <v-btn
+            flat
+            @click="playAll"
+            class="my-0 py-3"
+          >
+            <v-icon>play_arrow</v-icon>
+            <div class="ml-1 pt-1">Play</div>
+          </v-btn>
+          <!-- <v-btn
+            icon
+            key="share"
+            @click="torf = !torf"
+            class="mr-0"
+          >
+            <v-icon>share</v-icon>
+          </v-btn> -->
+          <!-- <v-btn
+            v-if="torf"
+            icon
+            key="twitter"
+            class="mr-0"
+          >
+            <v-icon>fab fa-twitter</v-icon>
+          </v-btn>
+          <v-btn
+            v-if="torf"
+            icon
+            key="facebook"
+            class="mr-0"
+          >
+            <v-icon>fab fa-facebook-square</v-icon>
+          </v-btn> -->
+          <v-dialog
+            v-model="dialog"
+            max-width="450"
+          >
+            <template v-slot:activator="{ on }">
+              <v-btn
+                v-on="on"
+                icon
+              ><v-icon>far fa-trash-alt</v-icon></v-btn>
+            </template>
+            <v-card>
+              <v-container grid-list-xs>
+                <v-layout row wrap>
+                  <v-icon
+                    class="mx-auto"
+                    large
+                    color="error"
+                  >fas fa-exclamation-triangle</v-icon>
+                  <v-flex xs12>
+                    <span class="headline">Are you sure you wanna delete this playlist <strong>{{ title }}</strong> ?</span>
+                  </v-flex>
+                  <v-flex>
+                    <v-layout justify-end>
+                      <v-btn @click="deletePlaylist">YES</v-btn>
+                      <v-btn color="error" @click="dialog = false">NO</v-btn>
+                    </v-layout>
+                  </v-flex>
+                </v-layout>
+              </v-container>
+            </v-card>
+          </v-dialog>
         </v-toolbar-items>
       </v-toolbar>
     </v-card>
@@ -70,16 +106,24 @@
 export default {
   data: () => ({
     torf: false,
+    dialog: false,
   }),
   props: {
     theme: {type: Boolean, required: true},
-    thumbnail: {type: String, default: ""},
+    thumbnail: {type: String, required: true},
     title: {type: String, required: true},
   },
   methods: {
     playAll() {
       this.$emit('playAll')
       this.$emit('toaster', this.title)
+    },
+    queueAll() {
+      this.$emit('queueAll')
+      this.$emit('toaster', this.title)
+    },
+    deletePlaylist() {
+      this.$emit('deletePlaylist', this.title)
     }
   },
 }
@@ -97,17 +141,5 @@ export default {
   font-size: 16px;
   font-weight: bold;
   padding-bottom: 1%;
-}
-.tandf-enter-active {
-  transition: .5s ease-in;
-}
-.tandf-leave-active {
-  transition: .1s ease-in;
-}
-.tandf-enter, .tandf-leave-to {
-  opacity: 0;
-}
-.tandf-leave, .tandf-enter-to {
-  opacity: 1;
 }
 </style>

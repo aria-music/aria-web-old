@@ -80,6 +80,29 @@
           </transition-group>
         </draggable>
       </perfect-scrollbar>
+      <v-dialog
+        v-model="dialog"
+        scrollable
+        max-width="500px"
+        max-height="600px"
+        transition="dialog-transition"
+      >
+        <v-card>
+          <v-card-title><v-icon class="mr-2 pb-1">fas fa-plus</v-icon><strong style="font-size: 18px">Playlists</strong></v-card-title>
+          <v-divider></v-divider>
+            <v-card
+              v-for="playlist in playlists"
+              :key="playlist.index"
+              @click="addToPlaylist(playlist.name)"
+              @mouseup="color = true"
+              @mousedown="color = false"
+              style="cursor: pointer"
+              flat
+            >
+              <v-card-text class="my-0"><v-icon class="mr-2">fas fa-list-ul</v-icon>{{ playlist.name }}</v-card-text>
+            </v-card>
+        </v-card>
+      </v-dialog>
     </div>
   </v-card>
 </template>
@@ -88,6 +111,7 @@ import draggable from "vuedraggable"
 
 const itemList = [
   "Like this video",
+  "add to playlist",
   "Remove from this queue"
 ]
 
@@ -101,7 +125,9 @@ export default {
     items: itemList.map((name, index) => {
       return { name, order: index++ }
     }),
-    select: false,
+    dialog: false,
+    color: false,
+    selectedSong: "",
   }),
   computed: {
     queue: {
@@ -114,13 +140,19 @@ export default {
         }))
       }
     },
+    playlists() {
+      return this.$store.state.playlists.map((property, index) => {
+        property.index = index
+        return property
+      })
+    },
     dragOptions() {
       return {
         animation: 200,
         group: "description",
         disabled: false,
         ghostClass: "ghost"
-      };
+      }
     },
   },
   props: {
@@ -131,14 +163,22 @@ export default {
     subMenuFunc(order, element) {
       switch(order){
         case 0:
+          this.$store.dispatch('sendAsLike', element.uri)
           break
         case 1:
+          this.dialog = true
+          this.selectedSong = element.uri
+        case 2:
           this.removeFromQueue(element)
           break
       }
     },
     removeFromQueue(element) {
       this.$store.dispatch('sendAsRemoveFromQueue', element)
+    },
+    addToPlaylist(playlist) {
+      this.$store.dispatch('sendToAddToPlaylist', { listname: playlist, addedUri: this.selectedSong })
+      this.dialog = false
     }
   }
 };

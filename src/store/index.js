@@ -180,6 +180,9 @@ const store = new Vuex.Store({
         sendAsQueue({}, playUri) {
             sendToSocket('queue', { uri: playUri })
         },
+        sendAsQueueWithPlaylist({ }, list) {
+            sendToSocket('queue', { playlist: list })
+        },
         sendAsQueueToHead({ }, playUri) {
             sendToSocket('queue', { uri: playUri, head: true})
         },
@@ -208,10 +211,16 @@ const store = new Vuex.Store({
             sendToSocket('like', { uri: likeUri })
         },
         sendAsPlaylist({}, playlistName) {
-            sendToSocket('playlist', { name: playlistName})
+            sendToSocket('playlist', { name: playlistName })
         },
-        sendAsRemoveFromPlaylist({ }, { playlistName: playlistName, removeUri: removeUri }){
+        sendAsRemoveFromPlaylist({}, { playlistName: playlistName, removeUri: removeUri }) {
             sendToSocket('remove_from_playlist', { name: playlistName, uri: removeUri })
+        },
+        sendAsDeletePlaylist({}, listname) {
+            sendToSocket('delete_playlist', { name: listname })
+        },
+        sendToAddToPlaylist({}, {listname: listname, addedUri: addedUri}) {
+            sendToSocket('add_to_playlist', { name: listname, uri: addedUri})
         }
     }
 })

@@ -163,10 +163,8 @@ export default {
       }
     },
     selectPlaylist(list) {
-      if(list.length){
-        this.$store.dispatch('sendAsPlaylist', list.name)
-        this.$router.push('/playlist')
-      }
+      this.$store.dispatch('sendAsPlaylist', list.name)
+      this.$router.push('/playlist')
     },
     changeThumbnail() {
 			this.interval = setInterval(() => {

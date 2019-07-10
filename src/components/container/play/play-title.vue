@@ -56,7 +56,6 @@ const slicetext = require('@/components/options/slicetext')
 export default {
   data: () => ({
     src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
-    jumpUri: false,
     showTitle: false,
     items: [
       {key: 1, icon: "fab fa-facebook-f"},
@@ -72,11 +71,9 @@ export default {
     slicedTitle() {
       return slicetext(this.nowPlaying.title, 37)
     },
-  },
-  watch: {
-    nowPlaying: function() {
-      if(this.nowPlaying.uri.indexOf('http')) this.jumpUri = false
-      else this.jumpUri = true
+    jumpUri() {
+      if(this.nowPlaying.uri.indexOf('http')) return false
+      else return true
     }
   },
   methods: {
