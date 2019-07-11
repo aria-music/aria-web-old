@@ -52,9 +52,11 @@ export default {
       })
     }
   },
-  watch: {
-    playlistContent: function() {
-      if(this.playlistContents == []) this.$router.push('/')
+  created() {
+    if(this.playlistContents.length == 0){
+      this.playlistContents.entries = []
+      this.playlistContents.name = ""
+      this.$router.push('/')
     }
   },
   components: {

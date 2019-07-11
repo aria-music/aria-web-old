@@ -155,20 +155,27 @@ export default {
       this.showList = this.searchedList
     },
     select: function(newSelect) {
-      switch(newSelect){
+      const list = this.searchedList
+        switch(newSelect){
         case "everything":
-          this.showList = this.searchedList
+          this.showList = list
           break
         case "youtube":
-          this.showList = this.searchedList.filter((value) => {
-            return value.source == "youtube"
-          })
-          break
+          try{
+            this.showList = list.filter((value) => {
+              return value.source == "youtube"
+            })
+          }finally{
+            break
+          }
         case "gpm":
-          this.showList = this.searchedList.filter((value) => {
-            return value.source == "gpm"
-          })
-          break
+          try{
+            this.showList = list.filter((value) => {
+              return value.source == "gpm"
+            })
+          }finally{
+            break
+          }
       }
       document.querySelector('#search-result').scrollTop = 0
     }

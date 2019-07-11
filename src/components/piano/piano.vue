@@ -47,7 +47,7 @@ export default {
     },
     methods: {
         piano(file) {
-            if(file === 'Unregistered') return ''
+            if(file === '') return ''
             let sound = new Audio(require('@/components/piano/pianosound/' + file))
             sound.volume = 0.05
             sound.playbackRate = this.onSpace ? 0.6 : 1
@@ -78,11 +78,11 @@ export default {
                 this.input_key = 'space'
                 return ''
             } else if(keycode < 65 || keycode > 90) {
-                this.input_key = 'Unregistered'
+                this.input_key = ''
                 return ''
             } else {
                 this.input_key = alphabet[keycode - 65]
-                return medley[this.input_key] + '.mp3'
+                return medley[this.input_key] ? medley[this.input_key] + '.mp3' : ''
             }
         }
     }

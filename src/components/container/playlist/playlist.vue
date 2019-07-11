@@ -164,7 +164,9 @@ export default {
     },
     selectPlaylist(list) {
       this.$store.dispatch('sendAsPlaylist', list.name)
-      this.$router.push('/playlist')
+      setTimeout(() => {
+        this.$router.push('/playlist')
+      }, 300)
     },
     changeThumbnail() {
 			this.interval = setInterval(() => {
