@@ -26,9 +26,6 @@
                   round
                   icon
                   class="mr-3"
-                  :color="color"
-                  @mouseover="color='pink lighten-3'"
-                  @mouseout="color=''"
                   @click="goPlaylist"
                 ><v-icon>list</v-icon>
                 </v-btn>
@@ -59,7 +56,6 @@ export default {
   name: 'ariaHeader',
   data: () => ({
     text: "",
-    color: "",
     canMessageSend: false,
   }),
   props: {

@@ -4,10 +4,11 @@
       <perfect-scrollbar id="search-result">
         <transition-group name="searched-list">
           <v-card
-            class="searchResults"
+            class="searchResults mx-0 px-0"
             v-for="result in showList"
             :key="result.key"
             height="100"
+            width="98%"
             flat
           >
             <v-layout row wrap align-center fill-height>
@@ -84,7 +85,10 @@
                       @click="subSelectMenu(item.key, result)"
                     >
                       <v-list-tile-title>
-                        <div style="font-size: 14px">{{ item.content }}</div>
+                        <div style="font-size: 14px">
+                          <v-icon>{{ item.icon }}</v-icon>
+                          <span class="ml-2">{{ item.content }}</span>
+                        </div>
                       </v-list-tile-title>
                     </v-list-tile>
                   </v-list>
@@ -95,24 +99,55 @@
         </transition-group>
       </perfect-scrollbar>
     </v-container>
+    <v-dialog
+      v-model="dialog"
+      scrollable
+      max-width="500px"
+      max-height="600px"
+    >
+      <v-card>
+        <v-card-title><v-icon class="mr-2 pb-1">fas fa-plus</v-icon><strong style="font-size: 18px">Playlists</strong></v-card-title>
+        <v-divider></v-divider>
+          <v-card
+            v-for="playlist in playlists"
+            :key="playlist.index"
+            @click="addToPlaylist(playlist.name)"
+            @mouseup="color = true"
+            @mousedown="color = false"
+            style="cursor: pointer"
+            flat
+          >
+            <v-card-text class="my-0"><v-icon class="mr-2">fas fa-list-ul</v-icon>{{ playlist.name }}</v-card-text>
+          </v-card>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 <script>
 const slicetext = require('@/components/options/slicetext')
 
+const itemlist = [
+  { key: 0, content: 'Play Next', icon: 'fas fa-play-circle'},
+  { key: 1, content: 'Play Now', icon: 'far fa-play-circle'},
+  { key: 2, content: 'Add to Playlist', icon: 'fas fa-plus'}
+]
+
 export default {
   data: () => ({
     showList: null,
     src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
-    items: [
-      { key: 0, content: 'play next'},
-      { key: 1, content: 'flash queue & play'}
-    ],
+    items: itemlist,
+    dialog: false,
+    color: false,
+    selected: '',
   }),
   computed: {
     searchedList() {
       return this.$store.state.searchedData
     },
+    playlists() {
+      return this.$store.state.playlists
+    }
   },
   watch: {
     searchedList: function() {
@@ -156,11 +191,19 @@ export default {
           this.$store.dispatch("sendAsPlay", music.uri)
           this.emitSelectedMusic(music)
           break
+        case 2:
+          this.selected = music.uri
+          this.dialog = true
+          break
       }
     },
     emitSelectedMusic(music) {
       this.$emit('selectedMusic', music)
     },
+    addToPlaylist(playlist) {
+      this.$store.dispatch('sendAsAddToPlaylist', { listname: playlist, addedUri: this.selected })
+      this.dialog = false
+    }
   },
 }
 </script>

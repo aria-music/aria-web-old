@@ -22,9 +22,10 @@
                   <!-- play btn-->
                   <v-btn
                     icon
+                    large
                     @click="playOrPause(nowState)"
                     class="mr-2"
-                  ><v-icon>{{ nowState == 'paused' ? 'play_arrow' : 'pause' }}</v-icon>
+                  ><v-icon large>{{ nowState == 'paused' ? 'play_arrow' : 'pause' }}</v-icon>
                   </v-btn>
                   <!-- skip btn  -->
                   <v-btn

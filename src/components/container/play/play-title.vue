@@ -26,8 +26,8 @@
         <v-icon v-if="nowPlaying.source == 'youtube'">fab fa-youtube</v-icon>
         <v-icon v-if="nowPlaying.source == 'gpm'">fab fa-google-play</v-icon>
         <v-icon v-if="nowPlaying.source == 'soundcloud'">fab fa-soundcloud</v-icon>
-        <a :href="this.nowPlaying.uri" target="_blank" v-if="jumpUri">{{ this.nowPlaying.uri }}</a>
-        <span v-if="!jumpUri">{{ this.nowPlaying.uri }}</span>
+        <a :href="this.nowPlaying.uri" target="_blank" v-if="httpUri">{{ this.nowPlaying.uri }}</a>
+        <span v-if="!httpUri">{{ this.nowPlaying.uri }}</span>
       </v-card-text>
       <v-divider class="mx-3"></v-divider>
       <v-toolbar
@@ -58,9 +58,10 @@ export default {
     src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
     showTitle: false,
     items: [
-      {key: 1, icon: "fab fa-facebook-f"},
-      {key: 2, icon: "share"},
-      {key: 3, icon: "error_outline"},
+      { key: 0, icon: "fab fa-facebook-f"},
+      { key: 1, icon: "fab fa-twitter"},
+      { key: 2, icon: "fab fa-itunes-note"},
+      { key: 3, icon: "error_outline"}
     ],
   }),
   props: {
@@ -71,7 +72,7 @@ export default {
     slicedTitle() {
       return slicetext(this.nowPlaying.title, 37)
     },
-    jumpUri() {
+    httpUri() {
       if(this.nowPlaying.uri.indexOf('http')) return false
       else return true
     }
@@ -79,16 +80,26 @@ export default {
   methods: {
     btnFunc(key) {
       switch(key){
+        case 0:
+          break
         case 1:
-          break;
+          this.postTwitter(this.nowPlaying)
+          break
         case 2:
           this.$router.push('/piano')
-          break;
+          break
         case 3:
           this.showTitle = !this.showTitle
-          break;
+          break
       }
     },
+    postTwitter(now) {
+      let twitterText = now.title + '\r\n'
+      if(this.httpUri) twitterText = twitterText + now.uri + '\r\n'
+      twitterText = twitterText + '#NowPlaying #AriaMusic'
+      twitterText = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(twitterText)
+      window.open(twitterText)
+    }
   },
 }
 </script>

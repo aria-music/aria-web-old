@@ -56,18 +56,21 @@
                       >
                         <v-list-tile
                           v-for="item in items"
-                          :key="item.order"
+                          :key="item.key"
                           class="sub-menu"
-                          @click="subMenuFunc(item.order, element)"
+                          @click="subMenuFunc(item.key, element)"
                         >
                           <v-list-tile-title>
-                            <div style="font-size: 14px">{{ item.name }}</div>
+                            <div style="font-size: 14px">
+                              <v-icon>{{ item.icon }}</v-icon>
+                              <span class="ml-2">{{ item.content }}</span>
+                            </div>
                           </v-list-tile-title>
                         </v-list-tile>
                       </v-list>
                     </v-menu>
                   </v-flex>
-                  <v-flex>
+                  <v-flex xs1>
                     <v-btn
                       icon
                       class="handle"
@@ -86,7 +89,6 @@
         scrollable
         max-width="500px"
         max-height="600px"
-        transition="dialog-transition"
       >
         <v-card>
           <v-card-title><v-icon class="mr-2 pb-1">fas fa-plus</v-icon><strong style="font-size: 18px">Playlists</strong></v-card-title>
@@ -111,9 +113,9 @@
 import draggable from "vuedraggable"
 
 const itemList = [
-  "Like this video",
-  "add to playlist",
-  "Remove from this queue"
+  { key: 0, content: "Like", icon: 'fas fa-heart'},
+  { key: 1, content: "Add to Playlist", icon: 'fas fa-plus'},
+  { key: 2, content: "Remove", icon: 'far fa-trash-alt'},
 ]
 
 export default {
@@ -123,9 +125,7 @@ export default {
   },
   data: () => ({
     src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
-    items: itemList.map((name, index) => {
-      return { name, order: index }
-    }),
+    items: itemList,
     dialog: false,
     color: false,
     selectedSong: "",
@@ -189,7 +189,6 @@ export default {
 #playing-list {
   position: relative;
   height: calc(100vh - 450px); /* TODO */
-  width: 100%;
   max-width: 760px;
 }
 .ps {

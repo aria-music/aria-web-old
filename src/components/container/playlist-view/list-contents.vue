@@ -28,11 +28,11 @@
                 :aspect-ratio="1/1"
               ></v-img>
             </v-flex>
-            <v-flex xs8 py-2 @click="selectContent(element)">
+            <v-flex xs9 py-2 @click="selectContent(element)">
               <strong>{{ element.title }}</strong>
             </v-flex>
             <v-spacer></v-spacer>
-            <v-flex>
+            <v-flex xs1>
               <v-menu
                 bottom
                 origin="center center"
@@ -46,14 +46,17 @@
                     <v-icon small>fas fa-ellipsis-v</v-icon>
                   </v-btn>
                 </template>
-                <v-list>
+                <v-list class="py-0">
                   <v-list-tile
                     v-for="item in items"
-                    :key="item.order"
-                    @click="playlistSubBtn(item.order, element)"
+                    :key="item.key"
+                    @click="playlistSubBtn(item.key, element)"
                   >
                     <v-list-tile-title>
-                      <div style="font-size: 14px">{{ item.name }}</div>
+                      <div style="font-size: 14px">
+                        <v-icon>{{ item.icon }}</v-icon>
+                        <span class="ml-2">{{ item.content }}</span>
+                      </div>
                     </v-list-tile-title>
                   </v-list-tile>
                 </v-list>
@@ -70,9 +73,9 @@
 import draggable from "vuedraggable"
 
 const itemList = [
-  "play next",
-  "flash queue & play",
-  "Remove from this playlist",
+  { key: 0, content: "Play Next", icon: 'fas fa-play-circle'},
+  { key: 1, content: "Play Now", icon: 'far fa-play-circle'},
+  { key: 2, content: "Remove", icon: 'far fa-trash-alt'},
 ]
 
 export default {
@@ -81,9 +84,7 @@ export default {
     draggable,
   },
   data: () => ({
-    items: itemList.map((name, index) => {
-      return { name, order: index++ }
-    }),
+    items: itemList,
     select: false,
     src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
   }),
