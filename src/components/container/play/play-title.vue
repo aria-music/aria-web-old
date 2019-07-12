@@ -63,22 +63,32 @@
         </v-toolbar-items>
       </v-toolbar>
     </v-card>
+    <playlistDialog
+      :songUri="nowPlaying.uri"
+      :showDialog="showDialog"
+    />
   </v-card>
 </template>
 <script>
+import playlistDialog from "@/components/options/playlist-dialog"
 const slicetext = require('@/components/options/slicetext')
 
 export default {
   data: () => ({
     src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
     showTitle: false,
+    showDialog: false,
     items: [
       { key: 0, icon: "fab fa-facebook-f"},
       { key: 1, icon: "fab fa-twitter"},
       { key: 2, icon: "fab fa-itunes-note"},
-      { key: 3, icon: "error_outline"}
+      { key: 3, icon: "fas fa-plus"},
+      { key: 4, icon: "error_outline"}
     ],
   }),
+  components: {
+    playlistDialog,
+  },
   props: {
     theme: {type: Boolean, required: true},
     nowPlaying: {type: Object, required: true},
@@ -104,6 +114,9 @@ export default {
           this.$router.push('/piano')
           break
         case 3:
+          this.showDialog = !this.showDialog
+          break
+        case 4:
           this.showTitle = !this.showTitle
           break
       }
