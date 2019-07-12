@@ -4,7 +4,7 @@
       <perfect-scrollbar id="search-result">
         <transition-group name="searched-list">
           <v-card
-            class="searchResults mx-0 px-0"
+            class="searchResults"
             v-for="result in showList"
             :key="result.key"
             height="100"
@@ -197,6 +197,13 @@ export default {
 }
 </script>
 <style>
+.searchResults {
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+  cursor: pointer;
+}
 .searchResults:hover, .queue-sub-menu:hover {
   background-color: rgb(175, 175, 175);
 }
