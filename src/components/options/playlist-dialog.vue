@@ -19,7 +19,6 @@
           >
             <v-card-text
               class="my-0"
-              height=""
             >
               <span>
                 <v-icon class="mr-2">fas fa-list-ul</v-icon>

@@ -126,10 +126,7 @@ export default {
   }),
   computed: {
     searchedList() {
-      return this.$store.state.searchedData.map((property) => {
-        if(property.source == 'youtube') property.sliceTitle = slicetext(property.title, 100)
-        return property
-      })
+      return this.$store.state.searchedData
     },
   },
   components: {
@@ -144,7 +141,10 @@ export default {
       this.showList = this.searchedList
     },
     select: function(newSelect) {
-      const list = this.searchedList
+      const list = this.searchedList.map((property) => {
+        if(property.source == 'youtube') property.sliceTitle = slicetext(property.title, 100)
+        return property
+      })
         switch(newSelect){
         case "everything":
           this.showList = list
@@ -204,7 +204,10 @@ export default {
   padding-right: 0;
   cursor: pointer;
 }
-.searchResults:hover, .queue-sub-menu:hover {
+.searchResults:hover {
+  background-color: rgb(175, 175, 175);
+}
+.queue-sub-menu:hover {
   background-color: rgb(175, 175, 175);
 }
 #search-result {

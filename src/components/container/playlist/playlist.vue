@@ -107,6 +107,7 @@ export default {
   mounted() {
     this.onResize()
 		this.changeThumbnail()
+    this.$store.dispatch('fetchPlaylists')
 	},
 	beforeDestroy () {
 		clearInterval(this.interval)

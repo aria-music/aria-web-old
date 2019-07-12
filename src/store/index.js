@@ -4,10 +4,6 @@ import OpusToPCM from 'opus-to-pcm'
 
 Vue.use(Vuex)
 
-/// debug ///
-const newData = require("./queue-sample.json")
-const lists = require("./playlist-sample.json")
-//
 let sendJson = {
     op: '',
     key: '',
@@ -126,6 +122,9 @@ const store = new Vuex.Store({
         changeTheme(state, nowTheme) {
             state.theme = nowTheme
         },
+        setTheme(state, theme) {
+            state.theme = theme
+        },
         storeSearchResult(state, result) {
             state.searchedData = result.map((property, index) => {
                 property.key = index
@@ -159,13 +158,9 @@ const store = new Vuex.Store({
         },
         setVolume({}, volume){
             GainNode.gain.value = volume / 1600
-        }
+        },
     },
     actions: {
-        changeVolume({state}, nowVolume) {
-            state.volume = nowVolume
-            localStorage.setItem('volume', nowVolume)
-        },
         sendAsSearch({}, text) {
             this.commit('getSearchContents', text)
             sendToSocket('search', { query: text })
@@ -226,6 +221,9 @@ const store = new Vuex.Store({
         },
         sendAsRepeat({}, repeatUri) {
             sendToSocket('repeat', { uri: repeatUri})
+        },
+        sendAsClearQueue() {
+            sendToSocket('clear_queue')
         }
     }
 })

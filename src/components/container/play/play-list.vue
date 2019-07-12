@@ -1,9 +1,50 @@
 <template>
   <v-card height="100%">
-    <v-card-title>
+    <v-card-title class="pb-2">
       <strong style="font-size: 20px;">Next up</strong>
       <v-icon class="ml-2">fas fa-forward</v-icon>
+      <v-spacer></v-spacer>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            icon
+            v-on="on"
+          ><v-icon small>fas fa-edit</v-icon></v-btn>
+        </template>
+      <v-dialog
+        v-model="dialog"
+        max-width="410px"
+      >
+        <template v-slot:activator="{ on }">
+          <v-btn
+            icon
+            v-on="on"
+          ><v-icon small>fas fa-trash</v-icon></v-btn>
+        </template>
+        <v-card>
+          <v-container grid-list-xs>
+            <v-layout row wrap>
+              <v-icon
+                class="mx-auto"
+                large
+                color="error"
+              >fas fa-exclamation-triangle</v-icon>
+              <v-flex xs12 style="text-align: center">
+                <span
+                  class="headline mx-auto"
+                >Are you sure to delete this queue?</span>
+              </v-flex>
+              <v-flex mt-3>
+                <v-layout justify-end>
+                  <v-btn @click="clearQueue">YES</v-btn>
+                  <v-btn color="error" @click="dialog = false">NO</v-btn>
+                </v-layout>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card>
+      </v-dialog>
     </v-card-title>
+    <v-divider class="mx-4"></v-divider>
     <div id="playing-list">
       <perfect-scrollbar>
         <draggable
@@ -110,6 +151,7 @@ export default {
   data: () => ({
     src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
     items: itemList,
+    dialog: false,
     showDialog: false,
     songUri: "",
   }),
@@ -155,6 +197,19 @@ export default {
     removeFromQueue(element) {
       this.$store.dispatch('sendAsRemoveFromQueue', element)
     },
+    editMenuFunc(key) {
+      switch(key){
+        case 0:
+          break
+        case 1:
+          this.dialog = true
+          break
+      }
+    },
+    clearQueue() {
+      this.$store.dispatch('sendAsClearQueue')
+      this.dialog = false
+    }
   }
 };
 </script>

@@ -51,6 +51,7 @@
                     v-for="item in items"
                     :key="item.key"
                     @click="playlistSubBtn(item.key, element)"
+                    class="list-sub-menu"
                   >
                     <v-list-tile-title>
                       <div style="font-size: 14px">
@@ -133,6 +134,9 @@ export default {
   cursor: pointer;
 }
 .playlist-content:hover {
-  background-color: rgb(170, 170, 170);
+  background-color: rgb(175, 175, 175);
+}
+.list-sub-menu:hover {
+  background-color: rgb(175, 175, 175);
 }
 </style>

@@ -9,7 +9,9 @@
       <router-link to="/playlist"></router-link>
       <router-link to="/piano"></router-link>
       <router-link to="/"></router-link>
-      <router-view></router-view>
+      <transition name="aria" mode="out-in">
+        <router-view></router-view>
+      </transition>
     </div>
     <ariaFooter
      :width="width"
@@ -50,5 +52,11 @@ export default {
 ::-webkit-scrollbar {
   display: none;
   -webkit-appearance: none;
+}
+.aria-enter-active, .aria-leave-active {
+  transition: opacity .3s ease;
+}
+.aria-enter, .aria-leave-to {
+  opacity: 0;
 }
 </style>

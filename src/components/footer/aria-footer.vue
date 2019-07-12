@@ -172,6 +172,7 @@ export default {
   },
   mounted() {
     this.setIntervalForSeekbar()
+    this.setTheme()
   },
   beforeDestroy () {
     clearInterval(this.interval)
@@ -179,13 +180,14 @@ export default {
 	watch: {
 		theme: function(nowTheme) {
 			this.$store.commit('changeTheme', nowTheme)
+      localStorage.setItem('theme', nowTheme)
 		},
 		volume: function() {
 			if(this.volume >= 50) this.volumeIcon = "volume_up"
 			else if(this.volume == 0) this.volumeIcon = "volume_off"
 			else this.volumeIcon = "volume_down"
       this.$store.commit('setVolume', this.volume)
-      this.$store.dispatch('changeVolume', this.volume)
+      localStorage.setItem('volume', this.volume)
 		},
     isPlay: function(newstate) {
       if(newstate) this.$store.dispatch('sendAsResume')
@@ -232,6 +234,10 @@ export default {
     },
     progressSeekbar() {
       if(this.nowTime < 100 && this.nowState == 'playing') this.nowTime += this.countTime
+    },
+    setTheme() {
+      this.theme = localStorage.getItem('theme') == 'false' ? false : true
+      this.$store.commit('setTheme', this.theme)
     }
 	},
 }
