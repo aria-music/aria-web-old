@@ -17,15 +17,30 @@
       class="mt-3 mx-auto width"
     >
       <v-card-title class="playing-title" v-if="showTitle">
-        {{ nowPlaying.title }}
+        <span v-if="nowPlaying.source == 'gpm'">{{ nowPlaying.entry.title }}</span>
+        <span v-else>{{ nowPlaying.title }}</span>
       </v-card-title>
       <v-card-title class="playing-title" v-else>
         {{ slicedTitle }}
       </v-card-title>
       <v-card-text v-if="showTitle">
-        <v-icon v-if="nowPlaying.source == 'youtube'">fab fa-youtube</v-icon>
-        <v-icon v-if="nowPlaying.source == 'gpm'">fab fa-google-play</v-icon>
-        <v-icon v-if="nowPlaying.source == 'soundcloud'">fab fa-soundcloud</v-icon>
+        <span v-if="nowPlaying.source == 'youtube'">
+          <v-icon small>fab fa-youtube</v-icon>
+        </span>
+        <span v-if="nowPlaying.source == 'gpm'">
+          <div>
+            <v-icon small>fas fa-user-alt</v-icon>
+            <span>{{ nowPlaying.entry.artist }}</span>
+          </div>
+          <div>
+            <v-icon small>fas fa-compact-disc</v-icon>
+            <span>{{ nowPlaying.entry.album }}</span>
+          </div>
+          <v-icon small>fab fa-google-play</v-icon>
+        </span>
+        <span v-if="nowPlaying.source == 'soundcloud'">
+          <v-icon small>fab fa-soundcloud</v-icon>
+        </span>
         <a :href="this.nowPlaying.uri" target="_blank" v-if="httpUri">{{ this.nowPlaying.uri }}</a>
         <span v-if="!httpUri">{{ this.nowPlaying.uri }}</span>
       </v-card-text>
@@ -70,7 +85,7 @@ export default {
   },
   computed: {
     slicedTitle() {
-      return slicetext(this.nowPlaying.title, 37)
+      return this.nowPlaying.source == 'gpm' ? slicetext(this.nowPlaying.entry.title, 35) : slicetext(this.nowPlaying.title, 35)
     },
     httpUri() {
       if(this.nowPlaying.uri.indexOf('http')) return false

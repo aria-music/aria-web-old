@@ -26,7 +26,8 @@
                 <v-layout column>
                   <v-flex>
                     <v-card-title class="pl-1 py-0">
-                      <strong>{{ result.source == 'youtube' ? (result.title.length > 37 ? result.title.slice(0, 37)+'...' : result.title) : result.entry.title}}</strong>
+                      <strong v-if="result.source == 'youtube'">{{ result.title.length > 100 ? result.sliceTitle : result.title }}</strong>
+                      <strong v-if="result.source == 'gpm'">{{ result.entry.title }}</strong>
                     </v-card-title>
                   </v-flex>
                   <v-flex>
@@ -40,9 +41,9 @@
                       <v-flex v-if="result.source == 'gpm'">
                         <v-card-text class="py-0 pl-0">
                           <v-icon small class="mr-1">fas fa-music</v-icon>
-                          <strong>{{ result.entry.artist }}</strong>
+                          <strong>{{ result.entry.artist.length > 20 ? result.entry.artist.slice(0, 20)+'...' : result.entry.artist}}</strong>
                           <v-icon small class="ml-3  mr-1">fas fa-compact-disc</v-icon>
-                          <strong>{{ result.entry.album }}</strong>
+                          <strong>{{ result.entry.album.length > 20 ? result.entry.album.slice(0, 20)+'...' : result.entry.album}}</strong>
                         </v-card-text>
                       </v-flex>
                       <v-spacer></v-spacer>
@@ -99,31 +100,14 @@
         </transition-group>
       </perfect-scrollbar>
     </v-container>
-    <v-dialog
-      v-model="dialog"
-      scrollable
-      max-width="500px"
-      max-height="600px"
-    >
-      <v-card>
-        <v-card-title><v-icon class="mr-2 pb-1">fas fa-plus</v-icon><strong style="font-size: 18px">Playlists</strong></v-card-title>
-        <v-divider></v-divider>
-          <v-card
-            v-for="playlist in playlists"
-            :key="playlist.index"
-            @click="addToPlaylist(playlist.name)"
-            @mouseup="color = true"
-            @mousedown="color = false"
-            style="cursor: pointer"
-            flat
-          >
-            <v-card-text class="my-0"><v-icon class="mr-2">fas fa-list-ul</v-icon>{{ playlist.name }}</v-card-text>
-          </v-card>
-      </v-card>
-    </v-dialog>
+    <playlistDialog
+      :songUri="songUri"
+      :showDialog="showDialog"
+    />
   </v-card>
 </template>
 <script>
+import playlistDialog from "@/components/options/playlist-dialog"
 const slicetext = require('@/components/options/slicetext')
 
 const itemlist = [
@@ -137,17 +121,22 @@ export default {
     showList: null,
     src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
     items: itemlist,
-    dialog: false,
-    color: false,
-    selected: '',
+    showDialog: false,
+    songUri: '',
   }),
   computed: {
     searchedList() {
-      return this.$store.state.searchedData
+      return this.$store.state.searchedData.map((property) => {
+        if(property.source == 'youtube') property.sliceTitle = slicetext(property.title, 100)
+        return property
+      })
     },
-    playlists() {
-      return this.$store.state.playlists
-    }
+  },
+  components: {
+    playlistDialog,
+  },
+  props: {
+    select: {type: String, required: true},
   },
   watch: {
     searchedList: function() {
@@ -180,9 +169,6 @@ export default {
       document.querySelector('#search-result').scrollTop = 0
     }
   },
-  props: {
-    select: {type: String, required: true},
-  },
   methods: {
     playMusic(music) {
       this.$store.dispatch("sendAsQueue", music.uri)
@@ -199,23 +185,19 @@ export default {
           this.emitSelectedMusic(music)
           break
         case 2:
-          this.selected = music.uri
-          this.dialog = true
+          this.songUri = music.uri
+          this.showDialog = true
           break
       }
     },
     emitSelectedMusic(music) {
       this.$emit('selectedMusic', music)
     },
-    addToPlaylist(playlist) {
-      this.$store.dispatch('sendAsAddToPlaylist', { listname: playlist, addedUri: this.selected })
-      this.dialog = false
-    }
   },
 }
 </script>
 <style>
-.searchResults:hover {
+.searchResults:hover, .queue-sub-menu:hover {
   background-color: rgb(175, 175, 175);
 }
 #search-result {
@@ -232,8 +214,5 @@ export default {
 }
 .searched-list-leave-active {
   position: absolute;
-}
-.queue-sub-menu:hover {
-  background-color: rgb(225, 225, 225);
 }
 </style>
