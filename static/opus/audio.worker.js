@@ -25,7 +25,7 @@ function queueAudio(packet) {
 let ws
 
 onmessage = (event) => {
-    ws = new WebSocket("wss://sarisia.cc./stream/")
+    ws = new WebSocket("wss://sarisia.cc/stream/")
     ws.binaryType ="arraybuffer"
     ws.onopen = () => {
         ws.send(event.data)
