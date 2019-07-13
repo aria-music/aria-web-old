@@ -1,38 +1,65 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import OpusToPCM from 'opus-to-pcm'
+import AudioWorker from 'worker-loader!@/../static/opus/audio.worker.js'
 
 Vue.use(Vuex)
 
-/// debug ///
-const newData = require("./queue-sample.json")
-const lists = require("./playlist-sample.json")
-//
 let sendJson = {
     op: '',
     key: '',
 }
 
-const decoder = new OpusToPCM({ channels: 2 })
+// const decoder = new OpusToPCM({ channels: 2 })
 let context = new AudioContext()
 let GainNode = context.createGain()
-let playing = 0.0
+GainNode.connect(context.destination)
 let session_key
 
 let ws = new WebSocket('wss://sarisia.cc/player/')
-let audio = null
+const audioWorker = new AudioWorker()
+audioWorker.onmessage = (event) => {
+    // console.log(event.data)
+    queueAudio(event.data)
+}
+let buf
+let leftchannel
+let rightchannel
+let bufSource
+let offset = 0
+let playing = 0
+
+function refreshBuffer() {
+    buf = context.createBuffer(2, 960, 48000)
+    leftchannel = buf.getChannelData(0)
+    rightchannel = buf.getChannelData(1)
+    bufSource = context.createBufferSource()
+    bufSource.buffer = buf
+    bufSource.connect(GainNode)
+    offset = 0
+}
+
+function queueAudio(decoded) {
+    for (let x = 0; x < 960*2; x+=2) {
+        leftchannel[offset] = decoded[x]
+        rightchannel[offset] = decoded[x+1]
+        offset++
+    }
+
+    if (offset === 960) {
+        if (playing < context.currentTime)
+            playing = context.currentTime + 0.050
+
+        bufSource.start(playing)
+        playing += bufSource.buffer.duration
+        console.log(bufSource.buffer.duration)
+
+        refreshBuffer()
+    }
+}
 
 ws.onopen = (event) => {
     store.commit('setVolume', localStorage.getItem('volume'))
-    audio = new WebSocket('wss://sarisia.cc/stream/')
-    audio.binaryType = "arraybuffer"
-    audio.onopen = (event) => {
-        audio.send(session_key)
-    }
-    audio.onmessage = (event) => {
-        const raw = new Uint8Array(event.data)
-        decoder.decode(raw)
-    }
+    refreshBuffer()
 }
 
 ws.onmessage = (event) => {
@@ -42,6 +69,7 @@ ws.onmessage = (event) => {
             console.log('$fetch hello')
             session_key = container.key
             sendJson.key = session_key
+            audioWorker.postMessage(session_key)
             break
 
         case 'search':
@@ -83,21 +111,28 @@ ws.onerror = () => {
     ws = new WebSocket('wss://sarisia.cc/player/')
 }
 
-decoder.on('decode', (decoded) => {
-    let audioSource = context.createBufferSource()
-    audioSource.buffer = decoded
-    audioSource.connect(GainNode)
-    GainNode.connect(context.destination)
+// function playAudio(decoded_array) {
+//     let AudioBuffer = context.createBuffer(2, decoded_array.length/2, 48000)
+//     let audioSource = context.createBufferSource()
 
-    console.log(AudioBuffer.duration)
-    if (context.currentTime < playing) {
-        audioSource.start(playing)
-        playing += AudioBuffer.duration
-    } else {
-        audioSource.start(context.currentTime)
-        playing = context.currentTime + AudioBuffer.duration
-    }
-})
+//     let leftpacket = decoded_array.filter((t, index, a) => !(index % 2))
+//     let rightpacket = decoded_array.filter((t, index, a) => index % 2)
+
+//     AudioBuffer.getChannelData(0).set(leftpacket)
+//     AudioBuffer.getChannelData(1).set(rightpacket)
+//     audioSource.buffer = decoded
+//     audioSource.connect(GainNode)
+//     GainNode.connect(context.destination)
+
+//     console.log(AudioBuffer.duration)
+//     if (context.currentTime < playing) {
+//         audioSource.start(playing)
+//         playing += AudioBuffer.duration
+//     } else {
+//         audioSource.start(context.currentTime)
+//         playing = context.currentTime + AudioBuffer.duration
+//     }
+// }
 
 let sendToSocket = (op, data) => {
     let Json = Object.assign({}, sendJson)
@@ -158,7 +193,7 @@ const store = new Vuex.Store({
             state.forcusedPlaylist = contents
         },
         setVolume({}, volume){
-            GainNode.gain.value = volume / 1600
+            GainNode.gain.value = volume / 400
         }
     },
     actions: {
