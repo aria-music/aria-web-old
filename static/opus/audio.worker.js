@@ -2,6 +2,7 @@ import opusModule from './opus.js'
 
 let rawU8
 let decodedF32
+let ready = false
 const opus = opusModule({
     onRuntimeInitialized: function() {
         opus.ccall('init', 'number')
@@ -9,6 +10,7 @@ const opus = opusModule({
         const decodePtr = opus.ccall('decode_buf', 'number')
         rawU8 = new Uint8Array(opus.HEAPU8.buffer, encodePtr)
         decodedF32 = new Float32Array(opus.HEAPF32.buffer, decodePtr)
+        ready = true
     }
 })
 console.log(opus)
@@ -30,6 +32,7 @@ onmessage = (event) => {
         console.log("connected")
     }
     ws.onmessage = (packet) => {
-        queueAudio(packet.data)
+        if (ready)
+            queueAudio(packet.data)
     }
 }
