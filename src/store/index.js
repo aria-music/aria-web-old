@@ -51,7 +51,7 @@ function queueAudio(decoded) {
 
         bufSource.start(playing)
         playing += bufSource.buffer.duration
-        console.log(bufSource.buffer.duration)
+        // console.log(bufSource.buffer.duration)
 
         refreshBuffer()
     }
