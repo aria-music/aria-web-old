@@ -1,6 +1,6 @@
 
 var Module = (function() {
-  var _scriptDir = "http://localhost:8080/static/opus/opus.js";//import.meta.url;
+  var _scriptDir = "https://gaiji.pro/static/opus/opus.js";//import.meta.url;
   return (
 function(Module) {
   Module = Module || {};
