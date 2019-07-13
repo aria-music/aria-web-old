@@ -13,7 +13,7 @@ const FRAME_SIZE = 960
 const FLUSH_SIZE = FRAME_SIZE * 25
 const FLUSH_PACKET_SIZE = FLUSH_SIZE * 2
 
-let context = new AudioContext()
+let context = new (window.AudioContext || window.webkitAudioContext)()
 let GainNode = context.createGain()
 GainNode.connect(context.destination)
 let session_key
