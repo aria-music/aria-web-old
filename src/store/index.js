@@ -9,7 +9,10 @@ let sendJson = {
     key: '',
 }
 
-// const decoder = new OpusToPCM({ channels: 2 })
+const FRAME_SIZE = 960
+const FLUSH_SIZE = FRAME_SIZE * 25
+const FLUSH_PACKET_SIZE = FLUSH_SIZE * 2
+
 let context = new AudioContext()
 let GainNode = context.createGain()
 GainNode.connect(context.destination)
@@ -29,7 +32,7 @@ let offset = 0
 let playing = 0
 
 function refreshBuffer() {
-    buf = context.createBuffer(2, 960, 48000)
+    buf = context.createBuffer(2, FLUSH_SIZE, 48000)
     leftchannel = buf.getChannelData(0)
     rightchannel = buf.getChannelData(1)
     bufSource = context.createBufferSource()
@@ -38,20 +41,21 @@ function refreshBuffer() {
     offset = 0
 }
 
-function queueAudio(decoded) {
-    for (let x = 0; x < 960*2; x+=2) {
-        leftchannel[offset] = decoded[x]
-        rightchannel[offset] = decoded[x+1]
+function queueAudio(msg) {
+    const decodedF32 = new Float32Array(msg)
+    for (let x = 0; x < FLUSH_PACKET_SIZE; x+=2) {
+        leftchannel[offset] = decodedF32[x]
+        rightchannel[offset] = decodedF32[x+1]
         offset++
     }
 
-    if (offset === 960) {
+    if (offset === FLUSH_SIZE) {
         if (playing < context.currentTime)
-            playing = context.currentTime + 0.050
+            playing = context.currentTime + 1.00
 
         bufSource.start(playing)
         playing += bufSource.buffer.duration
-        // console.log(bufSource.buffer.duration)
+        console.log(bufSource.buffer.duration)
 
         refreshBuffer()
     }
