@@ -123,7 +123,7 @@
     </v-layout>
   </v-footer>
 </template>
-<script>
+<script type="module">
 import subQueue from './sub-queue-list'
 
 export default {

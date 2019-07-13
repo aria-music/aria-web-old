@@ -13,7 +13,8 @@ function resolve (dir) {
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
-    app: './src/main.js'
+    app: './src/main.js',
+    opus: './static/opus/opus.js'
   },
   output: {
     path: config.build.assetsRoot,
@@ -39,8 +40,17 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
+        include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')] //,
+        // exclude: /opus/
       },
+      // {
+      //   test: /opus\.js$/,
+      //   loader: 'file-loader'
+      // },
+      // {
+      //   test: /\.wasm$/,
+      //   loader: 'wasm-loader'
+      // },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
@@ -78,5 +88,8 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty'
-  }
+  }//,
+  // externals: {
+  //   opusenc: 'opusModule'
+  // }
 }
