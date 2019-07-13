@@ -4,12 +4,6 @@
       <strong style="font-size: 20px;">Next up</strong>
       <v-icon class="ml-2">fas fa-forward</v-icon>
       <v-spacer></v-spacer>
-        <template v-slot:activator="{ on }">
-          <v-btn
-            icon
-            v-on="on"
-          ><v-icon small>fas fa-edit</v-icon></v-btn>
-        </template>
       <v-dialog
         v-model="dialog"
         max-width="410px"

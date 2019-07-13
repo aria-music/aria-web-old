@@ -11,7 +11,7 @@
             width="98%"
             flat
           >
-            <v-layout row wrap align-center fill-height>
+            <v-layout row wrap align-center fill-height ma-0>
               <v-flex xs2 align-center @click="playMusic(result)">
                 <v-img
                   class="ma-auto"
@@ -186,7 +186,7 @@ export default {
           break
         case 2:
           this.songUri = music.uri
-          this.showDialog = true
+          this.showDialog = !this.showDialog
           break
       }
     },

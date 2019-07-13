@@ -10,7 +10,7 @@
     <div id="playlist-contents">
       <perfect-scrollbar>
         <v-card
-          class="playlist-content my-1 mx-auto"
+          class="playlist-content my-0 mx-auto"
           v-for="element in contents"
           :key="element.key"
           width="95%"
