@@ -28,8 +28,21 @@ let buf
 let leftchannel
 let rightchannel
 let bufSource
+// let prevBuf
 let offset = 0
 let playing = 0
+
+function resetAudio() {
+    const currentVolume = GainNode.gain.value
+    // prevBuf.stop()
+    context.close()
+    context = new (window.AudioContext || window.webkitAudioContext)()
+    GainNode = context.createGain()
+    GainNode.gain.value = currentVolume
+    GainNode.connect(context.destination)
+    playing = 0
+    refreshBuffer()
+}
 
 function refreshBuffer() {
     buf = context.createBuffer(2, FLUSH_SIZE, 48000)
@@ -49,16 +62,17 @@ function queueAudio(msg) {
         offset++
     }
 
-    if (offset === FLUSH_SIZE) {
+    // if (offset === FLUSH_SIZE) {
         if (playing < context.currentTime)
-            playing = context.currentTime + 1.00
+            playing = context.currentTime + 0.5
 
         bufSource.start(playing)
+        // prevBuf = bufSource
         playing += bufSource.buffer.duration
         // console.log(bufSource.buffer.duration)
+    // }
 
-        refreshBuffer()
-    }
+    refreshBuffer()
 }
 
 ws.onopen = (event) => {
@@ -114,29 +128,6 @@ ws.onmessage = (event) => {
 ws.onerror = () => {
     ws = new WebSocket('wss://sarisia.cc/player/')
 }
-
-// function playAudio(decoded_array) {
-//     let AudioBuffer = context.createBuffer(2, decoded_array.length/2, 48000)
-//     let audioSource = context.createBufferSource()
-
-//     let leftpacket = decoded_array.filter((t, index, a) => !(index % 2))
-//     let rightpacket = decoded_array.filter((t, index, a) => index % 2)
-
-//     AudioBuffer.getChannelData(0).set(leftpacket)
-//     AudioBuffer.getChannelData(1).set(rightpacket)
-//     audioSource.buffer = decoded
-//     audioSource.connect(GainNode)
-//     GainNode.connect(context.destination)
-
-//     console.log(AudioBuffer.duration)
-//     if (context.currentTime < playing) {
-//         audioSource.start(playing)
-//         playing += AudioBuffer.duration
-//     } else {
-//         audioSource.start(context.currentTime)
-//         playing = context.currentTime + AudioBuffer.duration
-//     }
-// }
 
 let sendToSocket = (op, data) => {
     let Json = Object.assign({}, sendJson)
@@ -267,6 +258,10 @@ const store = new Vuex.Store({
         },
         sendAsClearQueue() {
             sendToSocket('clear_queue')
+        },
+        initAudio() {
+            resetAudio()
+            console.log('audiocontext initialized')
         }
     }
 })

@@ -26,8 +26,8 @@
                   round
                   icon
                   class="mr-3"
-                  @click="goPlaylist"
-                ><v-icon>list</v-icon>
+                  @click="initAudioContext"
+                ><v-icon>refresh</v-icon>
                 </v-btn>
               </v-flex>
               <v-flex grow>
@@ -52,6 +52,8 @@
 </template>
 
 <script>
+import toast from '@/components/options/toastCore'
+
 export default {
   name: 'ariaHeader',
   data: () => ({
@@ -60,6 +62,9 @@ export default {
   }),
   props: {
     width: {type: Number, required: true}
+  },
+  components: {
+    toast,
   },
   methods: {
     goPlaylist() {
@@ -72,6 +77,10 @@ export default {
         this.text = ""
         this.$router.push('/search')
       }else return
+    },
+    initAudioContext() {
+      this.$store.dispatch('initAudio')
+      toast('Audio Reloaded!')
     }
   }
 }
