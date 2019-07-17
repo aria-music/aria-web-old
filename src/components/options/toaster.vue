@@ -3,7 +3,7 @@
     v-model="active"
     top
     color="pink accent-2"
-    :timeout=1500
+    :timeout=2500
   >
     <v-icon
       icon

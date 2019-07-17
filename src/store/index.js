@@ -147,7 +147,7 @@ const store = new Vuex.Store({
         queue: [],
         playlists: [],
         forcusedPlaylist: [],
-        volume: 0,
+        volume: 100,
     },
     getters: {
         //
