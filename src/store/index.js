@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import AudioWorker from 'worker-loader!@/../static/opus/audio.worker.js'
 
 Vue.use(Vuex)
-
+//it's ok?
 let sendJson = {
     op: '',
     key: '',
