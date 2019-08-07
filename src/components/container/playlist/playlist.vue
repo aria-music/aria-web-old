@@ -11,7 +11,7 @@
             class="mx-auto playlist"
             width="280px"
             height="280px"
-            :img="list.thumbnails[`${srcnum}`]"
+            :img="thumbnailSrc(list.thumbnails)"
             @click="selectPlaylist(list)"
           >
             <v-layout align-center fill-height>
@@ -174,10 +174,12 @@ export default {
     },
     changeThumbnail() {
 			this.interval = setInterval(() => {
-				if(this.srcnum == 3) this.srcnum = 0
-        else this.srcnum++
-			}, 5000)
+        this.srcnum++
+			}, 2000)
 		},
+    thumbnailSrc(thumbnails) {
+      return thumbnails[this.srcnum % thumbnails.length]
+    }
   },
 }
 </script>

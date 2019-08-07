@@ -38,8 +38,9 @@
                 :funcs="[
                   'playnext',
                   'playnow',
-                  'remove'
+                  'removeList'
                 ]"
+                :playlistName="playlistName"
               />
             </v-flex>
           </v-layout>
@@ -66,6 +67,7 @@ export default {
   props: {
     theme: {type: Boolean, required: true},
     contents: {type: Array, required: true},
+    playlistName: {type: String, required: true},
   },
   methods: {
     selectContent(element) {

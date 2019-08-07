@@ -78,7 +78,7 @@
                      :funcs="[
                         'like',
                         'addList',
-                        'remove'
+                        'removeQueue'
                       ]"
                     />
                   </v-flex>

@@ -42,9 +42,10 @@ const slicetext = require('@/components/options/slicetext')
 const useableItems = [
   { content: 'like', text: 'Like',  icon: 'fas fa-heart' },
   { content: 'addList', text: 'Add to Playlist', icon: 'fas fa-plus' },
-  { content: 'remove', text: 'Remove', icon: 'far fa-trash-alt' },
+  { content: 'removeQueue', text: 'Remove', icon: 'far fa-trash-alt' },
   { content: 'playnext', text: 'Play Next', icon: 'fas fa-play-circle' },
   { content: 'playnow', text: 'Play Now', icon: 'far fa-play-circle' },
+  { content: 'removeList', text: 'Remove', icon: 'far fa-trash-alt' },
 ]
 
 export default {
@@ -57,6 +58,10 @@ export default {
       type: Array,
       required: true
     },
+    playlistName: {
+      type: String,
+      default: ''
+    }
   },
   data: () => ({
     isOpen: false,
@@ -79,14 +84,18 @@ export default {
         case 'addList':
           this.addList(this.element.uri)
           break
-        case 'remove':
-          this.remove(this.element)
+        case 'removeQueue':
+          this.removeFromQueue(this.element)
           break
         case 'playnext':
           this.playnext(this.element)
           break
         case 'playnow':
           this.playnow(this.element)
+          break
+        case 'removeList':
+          if(this.playlistName) this.removeFromPlaylist(this.playlistName, this.element.uri)
+          else throw new Error()
           break
       }
     },
@@ -98,7 +107,7 @@ export default {
       this.isOpen = false
       this.isShow = !this.isShow
     },
-    remove(element) {
+    removeFromQueue(element) {
       this.$store.dispatch('sendAsRemoveFromQueue', element)
     },
     playnext(element) {
@@ -108,6 +117,10 @@ export default {
     playnow(element) {
       this.$store.dispatch('sendAsPlay', element.uri)
       this.toaster(element.title)
+    },
+    removeFromPlaylist(name, uri) {
+      this.$store.dispatch('sendAsRemoveFromPlaylist', { playlistName: name, removeUri: uri })
+      this.$store.dispatch('sendAsPlaylist', name)
     },
     toaster(title) {
       const slicedTitle = title.length > 22 ? slicetext(title, 22) : title

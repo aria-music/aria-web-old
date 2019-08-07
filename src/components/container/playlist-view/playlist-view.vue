@@ -19,7 +19,7 @@
         <listContents
           :theme="theme"
           :contents="entries"
-          v-on:removeFromPlaylist="removeFromPlaylist"
+          :playlistName="playlistContents.name"
           v-on:toaster="toaster"
         />
       </v-flex>
@@ -72,10 +72,6 @@ export default {
     },
     queueAll() {
       this.$store.dispatch('sendAsQueueWithPlaylist', this.playlistContents.name)
-    },
-    removeFromPlaylist(removeUri) {
-      this.$store.dispatch('sendAsRemoveFromPlaylist', {playlistName: this.playlistContents.name, removeUri: removeUri})
-      this.$store.dispatch('sendAsPlaylist', this.playlistContents.name)
     },
     toaster(message) {
       const title = message > 22 ? slicetext(message, 22) : message
