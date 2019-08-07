@@ -58,7 +58,6 @@
                   <results
                     :select="select"
                     v-on:initSearchResult="initSearchResult"
-                    v-on:selectedMusic="selectedMusic"
                   />
                 </v-flex>
               </v-layout>
@@ -71,8 +70,7 @@
 </template>
 <script>
 import results from '@/components/container/search/search-results'
-import toast from '@/components/options/toastCore'
-let slicetext = require('@/components/options/slicetext')
+const slicetext = require('@/components/options/slicetext')
 
 export default {
   data: () => ({
@@ -92,16 +90,11 @@ export default {
   },
   components: {
     results,
-    toast
   },
   methods: {
     initSearchResult() {
       this.select = 'everything'
     },
-    selectedMusic(music) {
-      const title = music.title.length > 22 ? slicetext(music.title, 22) : music.title
-      toast(title)
-    }
   }
 }
 </script>

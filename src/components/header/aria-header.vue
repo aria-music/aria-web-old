@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import toast from '@/components/options/toastCore'
+import toast from '@/components/options/toaster/toastCore'
 
 export default {
   name: 'ariaHeader',

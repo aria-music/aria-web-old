@@ -61,68 +61,32 @@
                   ><v-icon v-if="result.isFavorite" color="pink darken-1">favorite</v-icon>
                   <v-icon v-else>favorite_border</v-icon>
                 </v-btn> -->
-                <v-menu
-                  bottom
-                  origin="center center"
-                  transition="scale-transition"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-btn
-                      class="ma-0"
-                      icon
-                      flat
-                      v-on="on"
-                    >
-                      <v-icon small>fas fa-ellipsis-v</v-icon>
-                    </v-btn>
-                  </template>
-                  <v-list
-                    class="py-0"
-                  >
-                    <v-list-tile
-                      v-for="item in items"
-                      :key="item.key"
-                      class="queue-sub-menu"
-                      @click="subSelectMenu(item.key, result)"
-                    >
-                      <v-list-tile-title>
-                        <div style="font-size: 14px">
-                          <v-icon>{{ item.icon }}</v-icon>
-                          <span class="ml-2">{{ item.content }}</span>
-                        </div>
-                      </v-list-tile-title>
-                    </v-list-tile>
-                  </v-list>
-                </v-menu>
+                <funcbtn
+                  :element="result"
+                  :funcs="[
+                    'playnext',
+                    'playnow',
+                    'addList'
+                  ]"
+                />
               </v-flex>
             </v-layout>
           </v-card>
         </transition-group>
       </perfect-scrollbar>
     </v-container>
-    <playlistDialog
-      :songUri="songUri"
-      :showDialog="showDialog"
-    />
   </v-card>
 </template>
 <script>
 import playlistDialog from "@/components/options/playlist-dialog"
+import funcbtn from "@/components/options/functional_button/func-btn"
+import toast from '@/components/options/toaster/toastCore'
 const slicetext = require('@/components/options/slicetext')
-
-const itemlist = [
-  { key: 0, content: 'Play Next', icon: 'fas fa-play-circle'},
-  { key: 1, content: 'Play Now', icon: 'far fa-play-circle'},
-  { key: 2, content: 'Add to Playlist', icon: 'fas fa-plus'}
-]
 
 export default {
   data: () => ({
     showList: null,
     src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
-    items: itemlist,
-    showDialog: false,
-    songUri: '',
   }),
   computed: {
     searchedList() {
@@ -131,6 +95,7 @@ export default {
   },
   components: {
     playlistDialog,
+    funcbtn
   },
   props: {
     select: {type: String, required: true},
@@ -172,27 +137,12 @@ export default {
   methods: {
     playMusic(music) {
       this.$store.dispatch("sendAsQueue", music.uri)
-      this.emitSelectedMusic(music)
+      this.toaster(music.title)
     },
-    subSelectMenu(key, music) {
-      switch(key){
-        case 0:
-          this.$store.dispatch("sendAsQueueToHead", music.uri)
-          this.emitSelectedMusic(music)
-          break
-        case 1:
-          this.$store.dispatch("sendAsPlay", music.uri)
-          this.emitSelectedMusic(music)
-          break
-        case 2:
-          this.songUri = music.uri
-          this.showDialog = !this.showDialog
-          break
-      }
-    },
-    emitSelectedMusic(music) {
-      this.$emit('selectedMusic', music)
-    },
+    toaster(title) {
+      const slicedTitle = title.length > 22 ? slicetext(title, 22) : title
+      toast(slicedTitle)
+    }
   },
 }
 </script>

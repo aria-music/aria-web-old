@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import AudioWorker from 'worker-loader!@/../static/opus/audio.worker.js'
 
 Vue.use(Vuex)
-//it's ok?
+
 let sendJson = {
     op: '',
     key: '',
@@ -148,9 +148,6 @@ const store = new Vuex.Store({
         playlists: [],
         forcusedPlaylist: [],
         volume: 100,
-    },
-    getters: {
-        //
     },
     mutations: {
         changeTheme(state, nowTheme) {

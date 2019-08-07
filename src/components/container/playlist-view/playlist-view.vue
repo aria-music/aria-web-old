@@ -29,7 +29,7 @@
 <script>
 import contentsTitle from '@/components/container/playlist-view/contents-title'
 import listContents from '@/components/container/playlist-view/list-contents'
-import toast from '@/components/options/toastCore'
+import toast from '@/components/options/toaster/toastCore'
 const slicetext = require('@/components/options/slicetext')
 
 export default {

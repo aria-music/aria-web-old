@@ -73,37 +73,14 @@
                   </v-flex>
                   <v-spacer></v-spacer>
                   <v-flex xs1>
-                    <v-menu
-                      bottom
-                      origin="center center"
-                      transition="scale-transition"
-                    >
-                      <template v-slot:activator="{ on }">
-                        <v-btn
-                          icon
-                          v-on="on"
-                        >
-                          <v-icon small>fas fa-ellipsis-v</v-icon>
-                        </v-btn>
-                      </template>
-                      <v-list
-                        class="py-0"
-                      >
-                        <v-list-tile
-                          v-for="item in items"
-                          :key="item.key"
-                          class="sub-menu"
-                          @click="subMenuFunc(item.key, element)"
-                        >
-                          <v-list-tile-title>
-                            <div style="font-size: 14px">
-                              <v-icon>{{ item.icon }}</v-icon>
-                              <span class="ml-2">{{ item.content }}</span>
-                            </div>
-                          </v-list-tile-title>
-                        </v-list-tile>
-                      </v-list>
-                    </v-menu>
+                    <funcbtn
+                     :element="element"
+                     :funcs="[
+                        'like',
+                        'addList',
+                        'remove'
+                      ]"
+                    />
                   </v-flex>
                   <v-flex xs1>
                     <v-btn
@@ -120,34 +97,21 @@
         </draggable>
       </perfect-scrollbar>
     </div>
-    <playlistDialog
-      :songUri="songUri"
-      :showDialog="showDialog"
-    />
   </v-card>
 </template>
 <script>
 import draggable from "vuedraggable"
-import playlistDialog from "@/components/options/playlist-dialog"
-
-const itemList = [
-  { key: 0, content: "Like", icon: 'fas fa-heart'},
-  { key: 1, content: "Add to Playlist", icon: 'fas fa-plus'},
-  { key: 2, content: "Remove", icon: 'far fa-trash-alt'},
-]
+import funcbtn from "@/components/options/functional_button/func-btn"
 
 export default {
   display: "Transitions",
   components: {
     draggable,
-    playlistDialog,
+    funcbtn,
   },
   data: () => ({
     src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
-    items: itemList,
     dialog: false,
-    showDialog: false,
-    songUri: "",
   }),
   computed: {
     queue: {
@@ -165,7 +129,8 @@ export default {
         animation: 200,
         group: "description",
         disabled: false,
-        ghostClass: "ghost"
+        ghostClass: "ghost",
+        forceFallback: true,
       }
     },
   },
@@ -174,31 +139,8 @@ export default {
     nowPlaying: {type: Object, required: true},
   },
   methods: {
-    subMenuFunc(order, element) {
-      switch(order){
-        case 0:
-          this.$store.dispatch('sendAsLike', element.uri)
-          break
-        case 1:
-          this.songUri = element.uri
-          this.showDialog = !this.showDialog
-          break
-        case 2:
-          this.removeFromQueue(element)
-          break
-      }
-    },
     removeFromQueue(element) {
       this.$store.dispatch('sendAsRemoveFromQueue', element)
-    },
-    editMenuFunc(key) {
-      switch(key){
-        case 0:
-          break
-        case 1:
-          this.dialog = true
-          break
-      }
     },
     clearQueue() {
       this.$store.dispatch('sendAsClearQueue')
@@ -234,8 +176,5 @@ export default {
 .list-group-item {
   cursor: pointer;
   list-style-type: none;
-}
-.sub-menu:hover {
-  background-color: rgb(175, 175, 175);
 }
 </style>
