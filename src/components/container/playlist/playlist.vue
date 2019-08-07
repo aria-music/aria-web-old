@@ -175,11 +175,10 @@ export default {
     changeThumbnail() {
 			this.interval = setInterval(() => {
         this.srcnum++
-			}, 3500)
+			}, 2000)
 		},
     thumbnailSrc(thumbnails) {
-      if(!thumbnails.length) return 'http://1.bp.blogspot.com/-K7zd3Dj8CvE/VaznHEdzeEI/AAAAAAAALvM/Hyaw3p1go3c/s1600/MBnYVEKO.jpeg'
-      else return thumbnails[this.srcnum % thumbnails.length]
+      return thumbnails[this.srcnum % thumbnails.length]
     }
   },
 }
