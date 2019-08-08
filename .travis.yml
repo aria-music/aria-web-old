@@ -23,6 +23,7 @@ deploy:
   repo: aria-music/aria-music.github.io
   target_branch: master
   local_dir: public
+  fqdn: gaiji.pro
   github_token: $GITHUB_TOKEN
   on:
     branch: master
