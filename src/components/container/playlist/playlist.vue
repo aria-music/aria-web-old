@@ -95,7 +95,7 @@ export default {
     dialog: false,
     error: false,
     playlistsWithAdd: [],
-    thinkingSrc: '@\static\pic\thinkingAria.PNG',
+    thinkingSrc: '@\static\pic\thinkingAria.png',
   }),
   computed: {
     playlists() {
