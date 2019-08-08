@@ -176,7 +176,7 @@ export default {
     changeThumbnail() {
 			this.interval = setInterval(() => {
         this.srcnum++
-			}, 3500)
+			}, 2000)
 		},
     thumbnailSrc(thumbnails) {
       if(thumbnails.length) return thumbnails[this.srcnum % thumbnails.length]
