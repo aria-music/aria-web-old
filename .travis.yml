@@ -20,7 +20,8 @@ script:
 deploy:
   provider: pages
   skip_cleanup: true
-  target_branch: gh-pages
+  repo: aria-music/aria-music.github.io
+  target_branch: master
   local_dir: public
   github_token: $GITHUB_TOKEN
   on:
