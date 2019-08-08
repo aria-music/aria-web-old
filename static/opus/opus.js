@@ -1,6 +1,6 @@
 
 var Module = (function() {
-  var _scriptDir = "https://gaiji.pro/static/opus/opus.js";//import.meta.url;
+  var _scriptDir = "https://aria-music.github.io/aria-web/static/opus/opus.js";//import.meta.url;
   return (
 function(Module) {
   Module = Module || {};
