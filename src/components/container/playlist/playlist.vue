@@ -95,6 +95,7 @@ export default {
     dialog: false,
     error: false,
     playlistsWithAdd: [],
+    thinkingSrc: '@\static\pic\thinkingAria.PNG',
   }),
   computed: {
     playlists() {
@@ -178,8 +179,8 @@ export default {
 			}, 3500)
 		},
     thumbnailSrc(thumbnails) {
-      if(!thumbnails.length) return 'http://1.bp.blogspot.com/-K7zd3Dj8CvE/VaznHEdzeEI/AAAAAAAALvM/Hyaw3p1go3c/s1600/MBnYVEKO.jpeg'
-      else return thumbnails[this.srcnum % thumbnails.length]
+      if(thumbnails.length) return thumbnails[this.srcnum % thumbnails.length]
+      else return require('@/assets/thinkingAria.png')
     }
   },
 }
