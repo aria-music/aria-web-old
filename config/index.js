@@ -9,8 +9,8 @@ module.exports = {
 
     // Paths
     assetsSubDirectory: 'static',
-    // assetsPublicPath: '/',
-    assetsPublicPath: '/aria-web/',
+    assetsPublicPath: '/',
+    // assetsPublicPath: '/aria-web/',
     proxyTable: {},
 
     // Various Dev Server settings
