@@ -1,14 +1,12 @@
 <template>
   <v-dialog
-    v-model="dialog"
+    v-model="showDialog"
     max-width="400px"
   >
-    <v-card style="height: 400px">
+    <v-card height="400">
       <v-card-title><v-icon class="mr-2 pb-1">fas fa-plus</v-icon><strong style="font-size: 18px">Playlists</strong></v-card-title>
       <v-divider></v-divider>
-      <v-card-text
-        class="playlist-dialog-container"
-      >
+      <v-card-text class="playlist-dialog-container">
         <perfect-scrollbar>
           <v-card
             v-for="playlist in playlists"
@@ -17,32 +15,51 @@
             class="playlist-dialog"
             flat
           >
-            <v-card-text
-              class="my-0"
-            >
+            <v-card-text class="my-0">
               <span>
                 <v-icon class="mr-2">fas fa-list-ul</v-icon>
-                {{ playlist.name }}
+                <span>{{ playlist.name }}</span>
+              </span>
+            </v-card-text>
+          </v-card>
+          <v-card
+            @click="creatNewPlaylist()"
+            class="playlist-dialog"
+            flat
+          >
+            <v-card-text class="my-0">
+              <span>
+                <v-icon class="mr-2">fas fa-plus</v-icon>
+                <span>New Playlist</span>
               </span>
             </v-card-text>
           </v-card>
         </perfect-scrollbar>
       </v-card-text>
     </v-card>
+    <createPlaylistDialog
+      :dialog="plDialog"
+    />
   </v-dialog>
 </template>
 <script>
+import createPlaylistDialog from '@/components/options/create_playlist_dialog/create-playlist-dialog'
+
 export default {
   data: () =>({
-    dialog: false,
+    showDialog: false,
+    plDialog: false,
   }),
+  components: {
+    createPlaylistDialog
+  },
   props: {
     songUri: {type: String, required: true},
-    showDialog: {type: Boolean, required: true}
+    dialog: {type: Boolean, required: true}
   },
   watch: {
-    showDialog: function() {
-      this.dialog = true
+    dialog: function() {
+      this.showDialog = true
     }
   },
   computed: {
@@ -56,7 +73,10 @@ export default {
   methods: {
     addToPlaylist(playlistName) {
       this.$store.dispatch('sendAsAddToPlaylist', { listname: playlistName, addedUri: this.songUri })
-      this.dialog = false
+      this.showDialog = false
+    },
+    creatNewPlaylist() {
+      this.plDialog = !this.plDialog
     }
   },
 }
@@ -70,6 +90,7 @@ export default {
 .playlist-dialog {
   cursor: pointer;
   margin-right: 0;
+  width: 390px;
 }
 .playlist-dialog:hover {
   background-color: rgb(175, 175, 175);

@@ -65,12 +65,12 @@
     </v-card>
     <playlistDialog
       :songUri="nowPlaying.uri"
-      :showDialog="showDialog"
+      :dialog="showDialog"
     />
   </v-card>
 </template>
 <script>
-import playlistDialog from "@/components/options/playlist-dialog"
+import playlistDialog from "@/components/options/playlist_dialog/playlist-dialog"
 const slicetext = require('@/components/options/slicetext')
 
 export default {

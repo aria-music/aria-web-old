@@ -78,7 +78,6 @@
   </v-card>
 </template>
 <script>
-import playlistDialog from "@/components/options/playlist-dialog"
 import funcbtn from "@/components/options/functional_button/func-btn"
 import toast from '@/components/options/toaster/toastCore'
 const slicetext = require('@/components/options/slicetext')
@@ -94,7 +93,6 @@ export default {
     },
   },
   components: {
-    playlistDialog,
     funcbtn
   },
   props: {

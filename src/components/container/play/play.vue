@@ -55,8 +55,5 @@ export default {
     playtitle,
     playlist,
   },
-  methods: {
-    //
-  }
 }
 </script>

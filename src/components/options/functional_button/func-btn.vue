@@ -28,14 +28,14 @@
         </v-list-tile-title>
       </v-list-tile>
       <playlistDialog
-        :showDialog="isShow"
+        :dialog="isShow"
         :songUri="url"
       />
     </v-list>
   </v-menu>
 </template>
 <script>
-import playlistDialog from "@/components/options/playlist-dialog"
+import playlistDialog from "@/components/options/playlist_dialog/playlist-dialog"
 import toast from '@/components/options/toaster/toastCore'
 const slicetext = require('@/components/options/slicetext')
 

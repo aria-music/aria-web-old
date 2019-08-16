@@ -22,55 +22,21 @@
             </v-layout>
           </v-card>
         </transition>
-        <v-dialog
+        <v-card
           v-if="list.kind == 'add'"
-          v-model="dialog"
-          max-width="450"
+          class="mx-auto"
+          width="280px"
+          height="280px"
+          flat
+          :ripple="{ center: true }"
+          @click="open()"
         >
-          <template v-slot:activator="{ on }">
-            <transition name="addlist">
-              <v-card
-                class="mx-auto"
-                width="280px"
-                height="280px"
-                flat
-                style="transition: all 1.0s;"
-                :ripple="{ center: true }"
-                v-on="on"
-              >
-                <v-layout justify-center align-center fill-height>
-                  <v-flex d-flex>
-                    <v-icon large>fas fa-plus</v-icon>
-                  </v-flex>
-                </v-layout>
-              </v-card>
-            </transition>
-          </template>
-          <v-card @keyup.enter="addPlaylist">
-            <v-card-text>
-              <span class="headline">New Playlist</span>
-            </v-card-text>
-            <v-container grid-list-xs>
-              <v-layout row wrap>
-                <v-flex xs12>
-                  <v-text-field
-                    v-model="newName"
-                    :error="error"
-                    label="Title"
-                    counter
-                    maxlength="30"
-                  ></v-text-field>
-                </v-flex>
-                <v-flex>
-                  <v-layout justify-end>
-                    <v-btn flat @click="dialog = false">cancel</v-btn>
-                    <v-btn color="primary" @click="addPlaylist">save</v-btn>
-                  </v-layout>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card>
-        </v-dialog>
+          <v-layout justify-center align-center fill-height>
+            <v-flex d-flex>
+              <v-icon large>fas fa-plus</v-icon>
+            </v-flex>
+          </v-layout>
+        </v-card>
         <v-card
           v-if="list.kind == 'decoy'"
           class="mx-auto"
@@ -82,21 +48,26 @@
         </v-card>
       </v-flex>
     </v-layout>
+    <createPlaylistDialog
+      :dialog="dialog"
+    />
   </v-container>
 </template>
 <script>
+import createPlaylistDialog from '@/components/options/create_playlist_dialog/create-playlist-dialog'
+
 export default {
   data: () => ({
     interval: 0,
     srcnum: 0,
     maxBoxSize: null,
     showPlaylists: null,
-    newName: "",
     dialog: false,
-    error: false,
     playlistsWithAdd: [],
-    thinkingSrc: '@\static\pic\thinkingAria.png',
   }),
+  components: {
+    createPlaylistDialog
+  },
   computed: {
     playlists() {
       return this.$store.state.playlists
@@ -117,12 +88,6 @@ export default {
 		clearInterval(this.interval)
 	},
   watch: {
-    dialog: function(newVal) {
-      if(!newVal){
-        this.newName = ""
-        this.error = false
-      }
-    },
     playlists: function() {
       let lists = this.playlists.map((property) => {
         return property
@@ -160,13 +125,6 @@ export default {
         }
       }
     },
-    addPlaylist() {
-      if(this.newName == "") this.error = true
-      else {
-        this.dialog = false
-        this.$store.dispatch('sendAsNewplaylist', this.newName)
-      }
-    },
     selectPlaylist(list) {
       this.$store.dispatch('sendAsPlaylist', list.name)
       setTimeout(() => {
@@ -176,11 +134,15 @@ export default {
     changeThumbnail() {
 			this.interval = setInterval(() => {
         this.srcnum++
-			}, 2000)
+        if(this.srcnum === 96) this.srcnum = 0
+			}, 3500)
 		},
     thumbnailSrc(thumbnails) {
       if(thumbnails.length) return thumbnails[this.srcnum % thumbnails.length]
-      else return require('@/assets/thinkingAria.png')
+      else return require('@/assets/icon/thinkingAria.png')
+    },
+    open() {
+      this.dialog = !this.dialog
     }
   },
 }
@@ -211,12 +173,6 @@ export default {
   opacity: 1;
 }
 .playlists-leave-active {
-  position: absolute;
-}
-.addlist-enter-active .addlist-leave-active{
-  transform: rotate(360deg)
-}
-.addlist-leave-active {
   position: absolute;
 }
 </style>
