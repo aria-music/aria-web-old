@@ -13,6 +13,7 @@
             :key="playlist.index"
             @click="addToPlaylist(playlist.name)"
             class="playlist-dialog"
+            width="390"
             flat
           >
             <v-card-text class="my-0">
@@ -25,6 +26,7 @@
           <v-card
             @click="creatNewPlaylist()"
             class="playlist-dialog"
+            width="390"
             flat
           >
             <v-card-text class="my-0">
@@ -90,7 +92,6 @@ export default {
 .playlist-dialog {
   cursor: pointer;
   margin-right: 0;
-  width: 390px;
 }
 .playlist-dialog:hover {
   background-color: rgb(175, 175, 175);
