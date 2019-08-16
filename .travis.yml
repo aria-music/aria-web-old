@@ -21,5 +21,6 @@ deploy:
   local_dir: public
   fqdn: gaiji.pro
   github_token: $GITHUB_TOKEN
+  committer_from_gh: true
   on:
     branch: master
