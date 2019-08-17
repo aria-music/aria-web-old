@@ -3,7 +3,7 @@
     v-model="showDialog"
     max-width="400px"
   >
-    <v-card height="400">
+    <v-card height="400px">
       <v-card-title><v-icon class="mr-2 pb-1">fas fa-plus</v-icon><strong style="font-size: 18px">Playlists</strong></v-card-title>
       <v-divider></v-divider>
       <v-card-text class="playlist-dialog-container">
@@ -13,7 +13,7 @@
             :key="playlist.index"
             @click="addToPlaylist(playlist.name)"
             class="playlist-dialog"
-            width="390"
+            width="390px"
             flat
           >
             <v-card-text class="my-0">
@@ -26,7 +26,7 @@
           <v-card
             @click="creatNewPlaylist()"
             class="playlist-dialog"
-            width="390"
+            width="390px"
             flat
           >
             <v-card-text class="my-0">
