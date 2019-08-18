@@ -23,6 +23,12 @@
 import ariaHeader from '@/components/header/aria-header'
 import ariaFooter from '@/components/footer/aria-footer'
 
+// register close confirmation
+window.addEventListener('beforeunload', (e) => {
+  e.preventDefault()
+  e.returnValue = 'Sure want to leave?'
+})
+
 export default {
   name: 'app',
   components: {
