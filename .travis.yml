@@ -10,6 +10,9 @@ cache:
 install:
   - npm install
 
+before_script:
+  - ./get_version.sh
+
 script:
   - npm run build
 
