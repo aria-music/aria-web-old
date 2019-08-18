@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import AudioWorker from 'worker-loader!@/../static/opus/audio.worker.js'
+const slicetext = require('@/components/options/slicetext')
 
 Vue.use(Vuex)
 
@@ -106,7 +107,7 @@ ws.onmessage = (event) => {
 
         case 'event_queue_change':
             console.log('$fetch type = event_queue_change')
-            store.commit('changeQueue', container.data)
+            store.commit('changeQueue', container.data.queue)
             break
 
         case 'event_player_state_change':
@@ -141,7 +142,7 @@ const store = new Vuex.Store({
     state: {
         theme: false,
         searchedData: null,
-        searchContents: "",
+        searchContents: localStorage.searchContents ? '' : localStorage.searchContents,
         playingData: { key: "", source: "", title: "", uri: "", thumbnail: "", entry: null },
         nowState: 'stopped',
         queue: [],
@@ -162,8 +163,10 @@ const store = new Vuex.Store({
                 return property
             })
         },
-        getSearchContents(state, text) {
-            state.searchContents = text
+        setSearchContents(state, text) {
+            const contents = text.length > 70 ? slicetext(text, 70) : text
+            state.searchContents = contents
+            localStorage.searchContents = contents
         },
         storePlaylists(state, result) {
             state.playlists = result.map((property, index) => {
@@ -177,8 +180,8 @@ const store = new Vuex.Store({
             state.nowState = result.state
         },
         changeQueue(state, result) {
-            if(result.queue != null){
-                state.queue = result.queue.map((property, index) => {
+            if(result != null){
+                state.queue = result.map((property, index) => {
                     property.index = index
                     return property
                 })
@@ -193,7 +196,7 @@ const store = new Vuex.Store({
     },
     actions: {
         sendAsSearch({}, text) {
-            this.commit('getSearchContents', text)
+            this.commit('setSearchContents', text)
             sendToSocket('search', { query: text })
         },
         sendAsNewplaylist({}, newName) {
@@ -212,7 +215,7 @@ const store = new Vuex.Store({
             sendToSocket('queue', { playlist: list })
         },
         sendAsQueueToHead({ }, playUri) {
-            sendToSocket('queue', { uri: playUri, head: true})
+            sendToSocket('queue', { uri: playUri, head: true })
         },
         sendAsPause() {
             sendToSocket('pause')
@@ -226,6 +229,9 @@ const store = new Vuex.Store({
         sendAsSkip() {
             sendToSocket('skip')
         },
+        sendAsSkipTo({}, element) {
+            sendToSocket('skip_to', { index: element.index, uri: element.uri })
+        },
         sendAsEditedQueue({}, newQueue) {
             sendToSocket('edit_queue', { queue: newQueue })
         },
@@ -233,7 +239,7 @@ const store = new Vuex.Store({
             sendToSocket('shuffle')
         },
         sendAsRemoveFromQueue({}, element) {
-            sendToSocket('remove', { uri: element.uri, index: element.index})
+            sendToSocket('remove', { uri: element.uri, index: element.index })
         },
         sendAsLike({}, likeUri) {
             sendToSocket('like', { uri: likeUri })
@@ -248,10 +254,10 @@ const store = new Vuex.Store({
             sendToSocket('delete_playlist', { name: listname })
         },
         sendAsAddToPlaylist({}, {listname: listname, addedUri: addedUri}) {
-            sendToSocket('add_to_playlist', { name: listname, uri: addedUri})
+            sendToSocket('add_to_playlist', { name: listname, uri: addedUri })
         },
         sendAsRepeat({}, repeatUri) {
-            sendToSocket('repeat', { uri: repeatUri})
+            sendToSocket('repeat', { uri: repeatUri })
         },
         sendAsClearQueue() {
             sendToSocket('clear_queue')

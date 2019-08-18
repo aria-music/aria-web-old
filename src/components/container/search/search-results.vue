@@ -4,7 +4,8 @@
       <perfect-scrollbar id="search-result">
         <transition-group name="searched-list">
           <v-card
-            class="searchResults"
+            mx-0
+            px-0
             v-for="result in showList"
             :key="result.key"
             height="100"
@@ -15,7 +16,8 @@
               <v-flex xs2 align-center @click="playMusic(result)">
                 <v-img
                   class="ma-auto"
-                  :src="result.thumbnail == '' ? src : result.thumbnail "
+                  @error="switchToNoimage(result)"
+                  :src="result.thumbnail == '' ? switchToNoimage(result) : result.thumbnail"
                   contain
                   max-height="80"
                   max-width="80"
@@ -84,11 +86,12 @@ const slicetext = require('@/components/options/slicetext')
 
 export default {
   data: () => ({
-    showList: null,
+    showList: [],
+    searchedList: [],
     src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
   }),
   computed: {
-    searchedList() {
+    searchedData() {
       return this.$store.state.searchedData
     },
   },
@@ -98,17 +101,27 @@ export default {
   props: {
     select: {type: String, required: true},
   },
+  mounted() {
+    // localStorage.removeItem('searchedResult')
+    const dataInStorage = JSON.parse(localStorage.searchedResult)
+    if(dataInStorage != null) this.searchedList = dataInStorage
+  },
   watch: {
-    searchedList: function() {
-      this.$emit('initSearchResult')
-      this.showList = this.searchedList
+    searchedData: function(newData) {
+      this.searchedList = newData
+      localStorage.searchedResult = JSON.stringify(newData)
     },
-    select: function(newSelect) {
-      const list = this.searchedList.map((property) => {
+    searchedList: function(newList) {
+      const list = newList.map((property) => {
         if(property.source == 'youtube') property.sliceTitle = slicetext(property.title, 100)
         return property
       })
-        switch(newSelect){
+      this.$emit('initSearchResult')
+      this.showList = newList
+    },
+    select: function(newSelect) {
+      const list = this.searchedList
+      switch(newSelect){
         case "everything":
           this.showList = list
           break
@@ -133,9 +146,12 @@ export default {
     }
   },
   methods: {
-    playMusic(music) {
-      this.$store.dispatch("sendAsQueue", music.uri)
-      this.toaster(music.title)
+    playMusic(result) {
+      this.$store.dispatch("sendAsQueue", result.uri)
+      this.toaster(result.title)
+    },
+    switchToNoimage(result) {
+      result.thumbnail = this.src
     },
     toaster(title) {
       const slicedTitle = title.length > 22 ? slicetext(title, 22) : title
@@ -146,10 +162,6 @@ export default {
 </script>
 <style>
 .searchResults {
-  margin-left: 0;
-  margin-right: 0;
-  padding-left: 0;
-  padding-right: 0;
   cursor: pointer;
 }
 .searchResults:hover {
