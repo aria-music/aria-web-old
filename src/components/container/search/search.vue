@@ -83,9 +83,7 @@ export default {
   }),
   computed: {
     searchContents() {
-      const result = this.$store.state.searchContents
-      if(result.length > 70) return slicetext(result, 70)
-      else return result
+      return this.$store.state.searchContents
     }
   },
   components: {

@@ -6,13 +6,13 @@
     <v-card height="400px">
       <v-card-title><v-icon class="mr-2 pb-1">fas fa-plus</v-icon><strong style="font-size: 18px">Playlists</strong></v-card-title>
       <v-divider></v-divider>
-      <v-card-text class="playlist-dialog-container">
+      <v-card-text class="playlist-dialog-container pa-0">
         <perfect-scrollbar>
           <v-card
             v-for="playlist in playlists"
             :key="playlist.index"
             @click="addToPlaylist(playlist.name)"
-            class="playlist-dialog"
+            class="playlist-dialog mr-0"
             width="390px"
             flat
           >
@@ -25,7 +25,7 @@
           </v-card>
           <v-card
             @click="creatNewPlaylist()"
-            class="playlist-dialog"
+            class="playlist-dialog mr-0"
             width="390px"
             flat
           >
@@ -87,11 +87,9 @@ export default {
 .playlist-dialog-container {
   position: relative;
   height: calc(100% - 61px);
-  padding: 0;
 }
 .playlist-dialog {
   cursor: pointer;
-  margin-right: 0;
 }
 .playlist-dialog:hover {
   background-color: rgb(175, 175, 175);

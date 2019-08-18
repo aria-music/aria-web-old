@@ -61,15 +61,18 @@
                   <v-flex xs2 pa-0>
                     <v-img
                       class="ma-auto"
-                      :src="element.thumbnail == '' ? src : element.thumbnail "
+                      :src="element.thumbnail == '' ? swichToNoimage(element) : element.thumbnail"
+                      @error="swichToNoimage(element)"
                       contain
                       max-height="50"
                       max-width="50"
                       :aspect-ratio="1/1"
                     ></v-img>
                   </v-flex>
-                  <v-flex xs8>
-                    <strong>{{ element.title }}</strong>
+                  <v-flex xs8 pa-0 @click="skipTo(element)">
+                    <v-card-text>
+                      <strong>{{ element.title }}</strong>
+                    </v-card-text>
                   </v-flex>
                   <v-spacer></v-spacer>
                   <v-flex xs1>
@@ -119,6 +122,7 @@ export default {
         return this.$store.state.queue
       },
       set(queue) {
+        this.$store.commit('changeQueue', queue)
         this.$store.dispatch('sendAsEditedQueue', queue.map((property) => {
           return property.uri
         }))
@@ -141,6 +145,12 @@ export default {
   methods: {
     removeFromQueue(element) {
       this.$store.dispatch('sendAsRemoveFromQueue', element)
+    },
+    skipTo(element) {
+      this.$store.dispatch('sendAsSkipTo', element)
+    },
+    swichToNoimage(element) {
+      element.thumbnail = this.src
     },
     clearQueue() {
       this.$store.dispatch('sendAsClearQueue')

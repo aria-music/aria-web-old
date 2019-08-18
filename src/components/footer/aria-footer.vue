@@ -83,7 +83,8 @@
                     @click="goPlay"
                   >
                     <v-img
-                      :src="nowPlayingData.thumbnail"
+                      :src="nowPlayingData.thumbnail == '' ? switchToNoimage(nowPlayingData) : nowPlayingData.thumbnail"
+                      @error="switchToNoimage(nowPlayingData)"
                       :aspect-ratio="1/1"
                       contain
                     ></v-img>
@@ -141,6 +142,7 @@ export default {
 		volumeBuff: 100,
 		volumeIcon: 'volume_up',
     isRepeat: false,
+    src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
 	}),
   computed: {
     nowState() {
@@ -213,6 +215,9 @@ export default {
 		},
     skip() {
       this.$store.dispatch('sendAsSkip')
+    },
+    switchToNoimage(element) {
+      element.thumbnail = this.src
     },
     playOrPause(nowState) {
       if(nowState == 'paused') this.$store.dispatch('sendAsResume')

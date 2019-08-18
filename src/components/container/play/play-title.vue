@@ -7,7 +7,8 @@
       :class="theme ? 'grey lighten-3' : 'grey darken-3'"
     >
       <v-img
-        :src="nowPlaying.thumbnail == '' ? src : nowPlaying.thumbnail "
+        :src="nowPlaying.thumbnail "
+        @error="swichToNoimage()"
         contain
         class="img-size"
         :aspect-ratio="1/1"
@@ -127,7 +128,10 @@ export default {
       twitterText = twitterText + '#NowPlaying #AriaMusic'
       twitterText = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(twitterText)
       window.open(twitterText)
-    }
+    },
+    swichToNoimage() {
+      this.nowPlaying.thumbnail = this.src
+    },
   },
 }
 </script>
