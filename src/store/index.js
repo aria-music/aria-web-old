@@ -10,9 +10,9 @@ let sendJson = {
     key: '',
 }
 
-const FRAME_SIZE = 960
-const FLUSH_SIZE = FRAME_SIZE * 25
-const FLUSH_PACKET_SIZE = FLUSH_SIZE * 2
+// const FRAME_SIZE = 960
+// const FLUSH_SIZE = FRAME_SIZE * 10
+// const FLUSH_PACKET_SIZE = FLUSH_SIZE * 2
 
 let context = new (window.AudioContext || window.webkitAudioContext)()
 let GainNode = context.createGain()
@@ -29,24 +29,23 @@ let buf
 let leftchannel
 let rightchannel
 let bufSource
-// let prevBuf
 let offset = 0
 let playing = 0
 
 function resetAudio() {
     const currentVolume = GainNode.gain.value
-    // prevBuf.stop()
     context.close()
     context = new (window.AudioContext || window.webkitAudioContext)()
     GainNode = context.createGain()
     GainNode.gain.value = currentVolume
     GainNode.connect(context.destination)
     playing = 0
-    refreshBuffer()
+    // refreshBuffer()
 }
 
-function refreshBuffer() {
-    buf = context.createBuffer(2, FLUSH_SIZE, 48000)
+function refreshBuffer(packet_length) {
+    // console.log(`packet length ${packet_length}`)
+    buf = context.createBuffer(2, packet_length/2, 48000)
     leftchannel = buf.getChannelData(0)
     rightchannel = buf.getChannelData(1)
     bufSource = context.createBufferSource()
@@ -56,72 +55,74 @@ function refreshBuffer() {
 }
 
 function queueAudio(msg) {
-    const decodedF32 = new Float32Array(msg)
-    for (let x = 0; x < FLUSH_PACKET_SIZE; x+=2) {
+    if (msg.len === 0)
+        return
+
+    refreshBuffer(msg.len)
+    const decodedF32 = new Float32Array(msg.buf)
+    for (let x = 0; x < msg.len; x+=2) {
         leftchannel[offset] = decodedF32[x]
         rightchannel[offset] = decodedF32[x+1]
         offset++
     }
 
-    // if (offset === FLUSH_SIZE) {
-        if (playing < context.currentTime)
-            playing = context.currentTime + 0.5
+    if (playing < context.currentTime)
+        playing = context.currentTime + 0.1
 
-        bufSource.start(playing)
-        // prevBuf = bufSource
-        playing += bufSource.buffer.duration
-        // console.log(bufSource.buffer.duration)
-    // }
+    bufSource.start(playing)
+    playing += bufSource.buffer.duration
 
-    refreshBuffer()
+    // refreshBuffer()
 }
 
 ws.onopen = (event) => {
     store.commit('setVolume', localStorage.getItem('volume'))
-    refreshBuffer()
+    // refreshBuffer()
 }
 
 ws.onmessage = (event) => {
     const container = JSON.parse(event.data)
+    console.log(`[fetch] ${container.type}`)
+
     switch (container.type) {
         case 'hello':
-            console.log('$fetch hello')
             session_key = container.key
             sendJson.key = session_key
-            audioWorker.postMessage(session_key)
+            audioWorker.postMessage({op: 'connect', key: session_key})
             break
 
         case 'search':
-            console.log('$fetch type = search')
             store.commit('storeSearchResult', container.data)
             break
 
         case 'playlists':
-            console.log('$fetch type = playlists')
             store.commit('storePlaylists', container.data.playlists)
             break
 
         case 'playlist':
-            console.log('$fetch type = playlist')
             store.commit('storePlaylistContents', container.data)
 
         case 'event_queue_change':
-            console.log('$fetch type = event_queue_change')
             store.commit('changeQueue', container.data.queue)
             break
 
         case 'event_player_state_change':
-            console.log('$fetch type = event_player_state_change')
+            console.log(`[event_player_state_change] ${store.state.nowState} => ${container.data.state}`)
+            if (container.data.state === 'stopped') {
+                audioWorker.postMessage({op: 'flush'})
+            }
             store.commit('changeState', container.data)
             break
 
         case 'event_playlists_change':
-            console.log('$fetch type = event_playlists_change')
             store.commit('storePlaylists', container.data.playlists)
             break
 
         case 'event_playlist_entry_change':
-            console.log('$fetch type = event_playlist_entry_change')
+            break
+        
+        default:
+            console.log(`Unknown operation!: ${container.type}`)
             break
     }
 }
