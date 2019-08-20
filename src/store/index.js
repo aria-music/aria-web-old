@@ -193,7 +193,7 @@ const store = new Vuex.Store({
             state.forcusedPlaylist = contents
         },
         setVolume({}, volume){
-            GainNode.gain.value = volume / 400
+            GainNode.gain.value = volume / 100
         }
     },
     actions: {
