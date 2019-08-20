@@ -10,7 +10,6 @@
         :src="nowPlaying.thumbnail "
         @error="swichToNoimage()"
         contain
-        class="img-size"
         :aspect-ratio="1/1"
       ></v-img>
     </v-card>
