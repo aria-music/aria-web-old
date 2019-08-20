@@ -70,7 +70,7 @@ export default {
   }),
   computed: {
     ariaVersion() {
-      return `https://img.shields.io/badge/-${version}-ff4081?link=https%3A%2F%2Fgithub.com%2Faria-music%2Faria-web&style=flat-square&logo=github&labelColor=black`
+      return `https://img.shields.io/badge/version-${version}-ff4081?link=https%3A%2F%2Fgithub.com%2Faria-music%2Faria-web&style=flat-square&logo=github`
     }
   },
   props: {
