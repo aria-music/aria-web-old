@@ -1,1 +1,1 @@
-echo {\"version\": \"$(echo $TRAVIS_COMMIT | cut -c -6)\"} > static/VERSION.json
+echo {\"version\": \"$(echo $TRAVIS_COMMIT | cut -c -7)\"} > static/VERSION.json

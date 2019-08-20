@@ -101,6 +101,7 @@ ws.onmessage = (event) => {
 
         case 'playlist':
             store.commit('storePlaylistContents', container.data)
+            break
 
         case 'event_queue_change':
             store.commit('changeQueue', container.data.queue)
@@ -120,7 +121,7 @@ ws.onmessage = (event) => {
 
         case 'event_playlist_entry_change':
             break
-        
+
         default:
             console.log(`Unknown operation!: ${container.type}`)
             break
