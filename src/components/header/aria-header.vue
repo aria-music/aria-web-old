@@ -16,11 +16,13 @@
                 <v-icon style="margin-bottom: 2px">navigation</v-icon>
                 <span>ria_music</span>
               </div>
-              <v-img
-                :src="ariaVersion"
-                contain
-              >
-              </v-img>
+              <a href="https://github.com/aria-music/aria-web" target="_blank">
+                <v-img
+                  :src="ariaVersion"
+                  contain
+                >
+                </v-img>
+              </a>
             </v-toolbar-title>
           </v-flex>
           <v-flex xs4>
@@ -63,13 +65,12 @@ import {version} from "@/../static/VERSION.json"
 export default {
   name: 'ariaHeader',
   data: () => ({
-    verPath: 'static/VERSION.json',
     text: "",
     canMessageSend: false,
   }),
   computed: {
     ariaVersion() {
-      return `https://img.shields.io/badge/version-${version}-ff4081?link=https%3A%2F%2Fgithub.com%2Faria-music%2Faria-web&style=for-the-badge&logo=github`
+      return `https://img.shields.io/badge/version-${version}-ff4081?link=https%3A%2F%2Fgithub.com%2Faria-music%2Faria-web&style=flat-square&logo=github`
     }
   },
   props: {
