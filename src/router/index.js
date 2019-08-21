@@ -9,7 +9,7 @@ import piano from '@/components/piano/piano'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
+  // mode: 'history',
   routes: [
     {
       path: '/play',
