@@ -1,5 +1,7 @@
 # aria-ui
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/aria-music/aria-web.svg)](https://greenkeeper.io/)
+
 > A Vue.js project
 
 ## Build Setup
