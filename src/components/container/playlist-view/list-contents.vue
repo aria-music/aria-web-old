@@ -62,7 +62,7 @@ export default {
   },
   data: () => ({
     select: false,
-    src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
+    src: require('@/assets/icon/no_image.png'),
   }),
   props: {
     theme: {type: Boolean, required: true},

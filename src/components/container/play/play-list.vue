@@ -113,7 +113,7 @@ export default {
     funcbtn,
   },
   data: () => ({
-    src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
+    src: require('@/assets/icon/no_image.png'),
     dialog: false,
   }),
   computed: {
