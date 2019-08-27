@@ -7,7 +7,7 @@
       :class="theme ? 'grey lighten-3' : 'grey darken-3'"
     >
       <v-img
-        :src="thumbnail"
+        :src="entry.length == 0 ? src : entry[0].thumbnail"
         contain
         class="img-size"
         :aspect-ratio="1/1"
@@ -107,10 +107,11 @@ export default {
   data: () => ({
     torf: false,
     dialog: false,
+    src: require('@/assets/icon/no_image.png'),
   }),
   props: {
     theme: {type: Boolean, required: true},
-    thumbnail: {type: String, required: true},
+    entry: {type: Array, required: true},
     title: {type: String, required: true},
   },
   methods: {

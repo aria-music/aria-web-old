@@ -7,7 +7,7 @@
       >
         <contentsTitle
           :theme="theme"
-          :thumbnail="playlistContents.entries.length == 0 ? src : playlistContents.entries[0].thumbnail"
+          :entry="playlistContents.entries"
           :title="playlistContents.name"
           v-on:playAll="playAll"
           v-on:queueAll="queueAll"
@@ -36,7 +36,6 @@ export default {
   data: () => ({
     nowSelect: {},
     hover: false,
-    src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
   }),
   computed: {
     theme() {

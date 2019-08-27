@@ -75,7 +75,7 @@ const slicetext = require('@/components/options/slicetext')
 
 export default {
   data: () => ({
-    src: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg',
+    src: require('@/assets/icon/no_image.png'),
     showTitle: false,
     showDialog: false,
     items: [
