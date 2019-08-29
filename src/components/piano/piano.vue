@@ -38,12 +38,14 @@ export default {
         ]
     }),
     created() {
-        window.addEventListener('keydown', (event) => {
-            this.piano(this.getPianoFile(event.keyCode))
-        }),
-        window.addEventListener('keyup', (event) => {
-            if(event.keyCode === 32) this.onSpace = false
-        })
+        window.addEventListener('keydown', this.onKeydown)
+        window.addEventListener('keyup', this.onKeyup)
+        console.log('[Piano] Start')
+    },
+    beforeDestroy() {
+        window.removeEventListener('keydown', this.onKeydown)
+        window.removeEventListener('keyup', this.onKeyup)
+        console.log('[Piano] End')
     },
     methods: {
         piano(file) {
@@ -84,6 +86,12 @@ export default {
                 this.input_key = alphabet[keycode - 65]
                 return medley[this.input_key] ? medley[this.input_key] + '.mp3' : ''
             }
+        },
+        onKeydown(event) {
+            this.piano(this.getPianoFile(event.keyCode))
+        },
+        onKeyup(event) {
+            if(event.keyCode === 32) this.onSpace = false
         }
     }
 }
