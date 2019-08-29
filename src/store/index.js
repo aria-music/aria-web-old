@@ -33,11 +33,10 @@ let offset = 0
 let playing = 0
 
 function resetAudio() {
-    const currentVolume = GainNode.gain.value
     context.close()
     context = new (window.AudioContext || window.webkitAudioContext)()
     GainNode = context.createGain()
-    GainNode.gain.value = currentVolume
+    GainNode.gain.value = store.state.volume/50
     GainNode.connect(context.destination)
     playing = 0
     // refreshBuffer()
@@ -88,7 +87,9 @@ ws.onmessage = (event) => {
         case 'hello':
             session_key = container.key
             sendJson.key = session_key
-            audioWorker.postMessage({op: 'connect', key: session_key})
+            console.log(store.state.volume)
+            if (store.state.volume !== 0)
+                audioWorker.postMessage({op: 'connect', key: session_key})
             break
 
         case 'search':
@@ -192,8 +193,16 @@ const store = new Vuex.Store({
         storePlaylistContents(state, contents) {
             state.forcusedPlaylist = contents
         },
-        setVolume({}, volume){
-            GainNode.gain.value = volume / 100
+        setVolume(state, volume){
+            const newVolume = Number(volume)
+            // console.log(`Volume: ${state.volume} -> ${newVolume}`)
+            if (newVolume === 0)
+                audioWorker.postMessage({op: 'kill'})
+            else if (state.volume === 0)
+                audioWorker.postMessage({op: 'connect', key: session_key})
+
+            state.volume = newVolume
+            GainNode.gain.value = newVolume / 50
         }
     },
     actions: {
