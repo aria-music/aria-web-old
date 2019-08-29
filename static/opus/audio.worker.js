@@ -1,6 +1,8 @@
 import opusModule from './opus.js'
 
 
+let ws
+
 const FRAME_SIZE = 960 // 0.02s (20ms)
 const FLUSH_SIZE = FRAME_SIZE * 5
 const FLUSH_PACKET_SIZE = FLUSH_SIZE * 2
@@ -45,8 +47,6 @@ function queueAudio(packet) {
         flushBuffer()
 }
 
-let ws
-
 onmessage = (event) => {
     // expected json as event.data
     const packet = event.data
@@ -58,6 +58,9 @@ onmessage = (event) => {
             break
         case 'flush':
             doFlush()
+            break
+        case 'kill':
+            doKill()
             break
         default:
             break
@@ -86,4 +89,11 @@ function doConnect(payload) {
 
 function doFlush() {
     flushBuffer(true)
+}
+
+function doKill() {
+    try {
+        ws.close()
+        console.log("[AudioWorker] WS has killed!")
+    } catch (e) {}
 }
