@@ -21,7 +21,7 @@
             <v-flex xs2 pa-0 @click="selectContent(element)">
               <v-img
                 class="ma-auto"
-                :src="element.thumbnail == '' ? src : element.thumbnail "
+                :src="element.thumbnail_small == '' ? src : element.thumbnail_small "
                 contain
                 max-height="50"
                 max-width="50"

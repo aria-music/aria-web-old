@@ -17,7 +17,7 @@
                 <v-img
                   class="ma-auto"
                   @error="switchToNoimage(result)"
-                  :src="result.thumbnail == '' ? switchToNoimage(result) : result.thumbnail"
+                  :src="result.thumbnail_small == '' ? switchToNoimage(result) : result.thumbnail_small"
                   contain
                   max-height="80"
                   max-width="80"
