@@ -146,7 +146,7 @@ const store = new Vuex.Store({
         theme: false,
         searchedData: null,
         searchContents: localStorage.searchContents ? '' : localStorage.searchContents,
-        playingData: { key: "", source: "", title: "", uri: "", thumbnail: "", entry: null },
+        playingData: { key: "", source: "", title: "", uri: "", thumbnail: "", thumbnail_small: "", entry: null },
         nowState: 'stopped',
         queue: [],
         playlists: [],

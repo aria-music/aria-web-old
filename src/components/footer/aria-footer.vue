@@ -83,7 +83,7 @@
                     @click="goPlay"
                   >
                     <v-img
-                      :src="nowPlayingData.thumbnail == '' ? switchToNoimage(nowPlayingData) : nowPlayingData.thumbnail"
+                      :src="nowPlayingData.thumbnail_small == '' ? switchToNoimage(nowPlayingData) : nowPlayingData.thumbnail_small"
                       @error="switchToNoimage(nowPlayingData)"
                       :aspect-ratio="1/1"
                       contain
