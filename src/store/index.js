@@ -19,7 +19,10 @@ let GainNode = context.createGain()
 GainNode.connect(context.destination)
 let session_key
 
-let ws = new WebSocket('wss://sarisia.cc/player/')
+let ws
+let connecting = false
+connectWs()
+
 const audioWorker = new AudioWorker()
 audioWorker.onmessage = (event) => {
     // console.log(event.data)
@@ -31,6 +34,29 @@ let rightchannel
 let bufSource
 let offset = 0
 let playing = 0
+
+function connectWs() {
+    return new Promise((resolve, reject) => {
+        if (!!ws) {
+            ws.close()
+        }
+
+        connecting = true
+        let timeout = setTimeout(() => {
+            connecting = false
+            reject()
+        }, 10000)
+
+        ws = new WebSocket('wss://sarisia.cc/player/')
+        ws.onmessage = (event) => WSonmessage(event, resolve)
+        ws.onerror = (e) => { console.log(`[WS] WS errored: ${e}`) }
+        ws.onopen = () => {
+            clearTimeout(timeout)
+            connecting = false
+            console.log("[WS] Connected!")
+        }
+    })
+}
 
 function resetAudio() {
     context.close()
@@ -74,12 +100,7 @@ function queueAudio(msg) {
     // refreshBuffer()
 }
 
-ws.onopen = (event) => {
-    store.commit('setVolume', localStorage.getItem('volume'))
-    // refreshBuffer()
-}
-
-ws.onmessage = (event) => {
+function WSonmessage(event, resolve) {
     const container = JSON.parse(event.data)
     console.log(`[fetch] ${container.type}`)
 
@@ -87,9 +108,10 @@ ws.onmessage = (event) => {
         case 'hello':
             session_key = container.key
             sendJson.key = session_key
-            console.log(store.state.volume)
+            store.commit('setVolume', localStorage.getItem('volume'))
             if (store.state.volume !== 0)
                 audioWorker.postMessage({op: 'connect', key: session_key})
+            resolve()
             break
 
         case 'search':
@@ -129,16 +151,28 @@ ws.onmessage = (event) => {
     }
 }
 
-ws.onerror = () => {
-    ws = new WebSocket('wss://sarisia.cc/player/')
-}
+async function sendToSocket(op, data) {
+    if (connecting) {
+        return
+    }
 
-let sendToSocket = (op, data) => {
     let Json = Object.assign({}, sendJson)
     Json.op = op
     if(data) Json.data = data
-    ws.send(JSON.stringify(Json))
-    console.log('$send op = ' + op)
+
+    if (ws.readyState === WebSocket.OPEN) {
+        console.log('$send op = ' + op)
+        ws.send(JSON.stringify(Json))
+    } else if (!connecting) {
+        console.log('[WS] Reconnecting...')
+
+        try {
+            await connectWs()
+            sendToSocket(op, data)
+        } catch(er) {
+            console.log(`[WS] Failed to connect: ${er}`)
+        }
+    }
 }
 
 const store = new Vuex.Store({
